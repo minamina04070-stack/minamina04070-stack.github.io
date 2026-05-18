@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>夏こそ、整える。｜今活と夏の生前整理</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Noto+Sans+JP:wght@300;400&display=swap');
+
+  :root {
+    --ink: #1c1a17;
+    --cream: #faf8f3;
+    --paper: #f0ece3;
+    --warm: #b8935a;
+    --deep: #6b4f2a;
+    --muted: #9a9080;
+    --sage: #7a8c75;
+    --light-line: #e2dbd0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    font-size: 14.5px;
+    line-height: 2;
+  }
+
+  .wrapper {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 64px 28px 100px;
+    animation: fadeIn 0.9s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* タグ */
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--warm);
+    border: 1px solid var(--warm);
+    padding: 3px 10px;
+    border-radius: 1px;
+  }
+
+  /* タイトル */
+  h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(24px, 6vw, 34px);
+    font-weight: 600;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+
+  .lead-text {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    margin-bottom: 48px;
+  }
+
+  /* MAO短行 */
+  .mao {
+    margin: 2.2em 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .mao s-line {
+    display: block;
+    line-height: 2.3;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+  }
+  .mao .gap { height: 0.9em; display: block; }
+  .mao .hl {
+    color: var(--warm);
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  /* セクション見出し */
+  h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    margin: 3.5em 0 1em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  h2::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--warm);
+    flex-shrink: 0;
+  }
+
+  p { margin-bottom: 1em; }
+
+  /* 整理カード */
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin: 1.5em 0;
+    border: 1px solid var(--light-line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .card {
+    background: #fff;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--light-line);
+  }
+  .card:last-child { border-bottom: none; }
+
+  .card-num {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--warm);
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+
+  .card-body {
+    font-size: 13px;
+    color: #5a5550;
+    line-height: 1.9;
+    margin: 0;
+  }
+
+  .card-tip {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--sage);
+    display: flex;
+    gap: 6px;
+  }
+  .card-tip::before { content: "▷"; flex-shrink: 0; }
+
+  /* 区切り */
+  .divider {
+    width: 36px;
+    height: 1px;
+    background: var(--warm);
+    margin: 3em 0;
+    opacity: 0.5;
+  }
+
+  /* 強調ボックス */
+  .note-box {
+    background: var(--paper);
+    border-left: 3px solid var(--warm);
+    padding: 20px 22px;
+    margin: 2em 0;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    line-height: 2.2;
+    color: var(--ink);
+  }
+
+  /* 持ち物リスト */
+  .list-simple {
+    list-style: none;
+    padding: 0;
+    margin: 1.2em 0;
+  }
+  .list-simple li {
+    padding: 9px 0 9px 22px;
+    position: relative;
+    border-bottom: 1px solid var(--light-line);
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+  .list-simple li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--sage);
+    font-size: 12px;
+  }
+
+  /* CTA */
+  .cta {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 40px 32px;
+    margin: 4em 0 2em;
+    border-radius: 3px;
+    text-align: center;
+  }
+  .cta-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--warm);
+    margin-bottom: 14px;
+    display: block;
+  }
+  .cta h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--cream);
+    margin-bottom: 12px;
+    line-height: 1.8;
+  }
+  .cta p {
+    font-size: 13px;
+    color: #c8c2b8;
+    line-height: 2;
+    margin-bottom: 22px;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: var(--warm);
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    padding: 12px 32px;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+  }
+  .cta-btn:hover { opacity: 0.85; }
+
+  /* フッター */
+  .footer {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 2.2;
+    margin-top: 2em;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="tag-row">
+    <span class="tag">今活</span>
+    <span class="tag">生前整理</span>
+    <span class="tag">夏の整え方</span>
+    <span class="tag">無料</span>
+  </div>
+
+  <h1>夏こそ、整える。<br>「もしも」に備える<br>今活の5ステップ</h1>
+  <p class="lead-text">— 暑い夏だからこそ、身の回りを軽くしておく</p>
+
+  <div class="mao">
+    <s-line>「生前整理」と聞くと</s-line>
+    <s-line>なんだか重たい気がしますよね。</s-line>
+    <s-line class="gap"></s-line>
+    <s-line>でも、考えてみてください。</s-line>
+    <s-line class="gap"></s-line>
+    <s-line>夏は、もともと「片づけの季節」。</s-line>
+    <s-line>虫干しをして、押し入れを開けて</s-line>
+    <s-line>風を通す。</s-line>
+    <s-line class="gap"></s-line>
+    <s-line class="hl">今活もおなじです。</s-line>
+    <s-line>重たく構えなくていい。</s-line>
+    <s-line>今日できる、小さな一歩でいい。</s-line>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2>なぜ夏に整えるのか</h2>
+
+  <p>夏は「動」の季節。エネルギーが外に向かう時期だからこそ、逆に「内側」を整えるのに向いています。</p>
+  <p>また、災害が多い季節でもある。台風、大雨、猛暑による体調変化——夏は「もしも」が起きやすい時期です。</p>
+
+  <div class="note-box">
+    いざというとき、大切な人が困らないために。<br>
+    そしてなにより、自分が「ここまでやった」と<br>
+    安心して今日を生きるために。
+  </div>
+
+  <h2>今活の5ステップ｜夏バージョン</h2>
+
+  <div class="cards">
+
+    <div class="card">
+      <span class="card-num">STEP 01</span>
+      <div class="card-title">書類・通帳の場所を一枚紙にまとめる</div>
+      <p class="card-body">保険証・通帳・権利書・エンディングノートの保管場所を、A4一枚にまとめて封筒に入れておく。</p>
+      <p class="card-tip">家族が一人で探せるように、引き出しの名前も書いておくと安心です。</p>
+    </div>
+
+    <div class="card">
+      <span class="card-num">STEP 02</span>
+      <div class="card-title">スマホ・デジタルの「もしも」を決める</div>
+      <p class="card-body">パスワードの管理方法、SNSアカウントをどうしてほしいか、LINE・写真の扱い——デジタル遺品は、今が一番整理しやすい。</p>
+      <p class="card-tip">紙に書いて、信頼できる人に預けるだけでOK。</p>
+    </div>
+
+    <div class="card">
+      <span class="card-num">STEP 03</span>
+      <div class="card-title">夏の「防災今活」を点検する</div>
+      <p class="card-body">非常用持ち出し袋の中身、賞味期限切れの備蓄食品、常備薬の残量——夏前に一度、開けてみてください。</p>
+      <p class="card-tip">「整理」は片づけだけじゃない。備えることも、今活です。</p>
+    </div>
+
+    <div class="card">
+      <span class="card-num">STEP 04</span>
+      <div class="card-title">使っていないモノを、ひとつ手放す</div>
+      <p class="card-body">全部捨てなくていい。今日、「もう使わない」と思うものを一つだけ選ぶ。それだけで、身も心も少し軽くなります。</p>
+      <p class="card-tip">手放すことで、大切なものが見えてきます。</p>
+    </div>
+
+    <div class="card">
+      <span class="card-num">STEP 05</span>
+      <div class="card-title">大切な人に、気持ちを伝える</div>
+      <p class="card-body">モノの整理だけが今活ではありません。「ありがとう」「元気でいてね」——言葉も、今活の大切な一部です。</p>
+      <p class="card-tip">手紙でも、LINEでも、電話でもいい。今日、一人に伝えてみてください。</p>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <h2>防災今活チェック｜非常用持ち出し袋の中身</h2>
+
+  <p>夏に見直しておきたい基本リストです。</p>
+
+  <ul class="list-simple">
+    <li>常備薬・お薬手帳のコピー</li>
+    <li>現金（千円札・小銭）</li>
+    <li>飲料水（500ml × 人数分）</li>
+    <li>携帯充電器・予備バッテリー</li>
+    <li>保険証・マイナンバーカードのコピー</li>
+    <li>緊急連絡先リスト（紙で）</li>
+    <li>替えの眼鏡・補聴器の電池</li>
+    <li>着替え・タオル・携帯トイレ</li>
+  </ul>
+
+  <div class="mao">
+    <s-line class="gap"></s-line>
+    <s-line>整理は、自分へのやさしさです。</s-line>
+    <s-line class="gap"></s-line>
+    <s-line>残される人のためでもあるけれど</s-line>
+    <s-line>なにより、今日の自分が</s-line>
+    <s-line>少しだけ安心して眠れるように。</s-line>
+    <s-line class="gap"></s-line>
+    <s-line class="hl">夏の終わりに、整えた自分でいよう。</s-line>
+  </div>
+
+  <div class="cta">
+    <span class="cta-eyebrow">MAO LINE 公式アカウント</span>
+    <h3>「何から始めればいい？」<br>一緒に考えます。</h3>
+    <p>
+      今活・終活・生前整理について<br>
+      個別にご相談いただけます。<br>
+      一人で抱えないでください。
+    </p>
+    <a class="cta-btn" href="https://lin.ee/SGVlcAV" target="_blank">LINE で話してみる →</a>
+  </div>
+
+  <p class="footer">
+    一般社団法人MAO｜皆方千尋<br>
+    今活 × こころの整理<br>
+    #今活 #生前整理 #終活 #防災 #夏の整え方 #グリーフケア
+  </p>
+
+</div>
+</body>
+</html>

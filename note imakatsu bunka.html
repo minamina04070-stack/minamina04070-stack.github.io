@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お盆は、今活だった。｜日本のしきたりと「今を生きる」こと</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Noto+Serif+JP:wght@300;400&display=swap');
+
+  :root {
+    --ink: #1a1814;
+    --cream: #faf7f0;
+    --paper: #f0ead8;
+    --warm: #9a7040;
+    --deep: #5c3d1e;
+    --muted: #8a8070;
+    --sage: #6a7a60;
+    --line: #ddd5c0;
+    --pale: #f5f0e4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 2.1;
+  }
+
+  .wrapper {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 64px 28px 100px;
+    animation: rise 0.9s ease both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tags {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 26px;
+  }
+  .tag {
+    font-size: 10px; letter-spacing: 0.18em;
+    color: var(--warm); border: 1px solid var(--warm);
+    padding: 3px 10px; border-radius: 1px;
+    font-family: 'Shippori Mincho', serif;
+  }
+
+  h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(22px, 5.5vw, 32px);
+    font-weight: 600;
+    line-height: 1.65;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+
+  .lead {
+    font-size: 13px; color: var(--muted);
+    letter-spacing: 0.13em; margin-bottom: 48px;
+  }
+
+  /* MAO短行 */
+  .mao {
+    margin: 2.4em 0;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15.5px;
+    line-height: 2.4;
+  }
+  .mao .g { display: block; height: 0.8em; }
+  .mao .hl { color: var(--warm); font-weight: 500; }
+
+  .divider {
+    width: 36px; height: 1px;
+    background: var(--warm);
+    margin: 3em 0; opacity: 0.5;
+  }
+
+  h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 17px; font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    margin: 3.5em 0 1em;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  p { margin-bottom: 1em; }
+
+  /* 文化解説カード */
+  .culture-card {
+    background: var(--pale);
+    border-radius: 3px;
+    padding: 24px 26px;
+    margin: 1.8em 0;
+    position: relative;
+  }
+  .culture-card .c-label {
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--warm);
+    margin-bottom: 8px; display: block;
+    font-family: 'Shippori Mincho', serif;
+  }
+  .culture-card .c-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 18px; font-weight: 600;
+    color: var(--deep);
+    margin-bottom: 10px;
+  }
+  .culture-card .c-body {
+    font-size: 13.5px;
+    color: #5a5040;
+    line-height: 2;
+    margin: 0;
+  }
+  .culture-card .c-imakatsu {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--sage);
+    line-height: 1.9;
+  }
+  .culture-card .c-imakatsu::before {
+    content: "今活の視点 ▷ ";
+    color: var(--warm);
+    font-weight: 500;
+  }
+
+  /* 引用ボックス */
+  .quote {
+    background: var(--paper);
+    border-left: 3px solid var(--warm);
+    padding: 22px 24px;
+    margin: 2em 0;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    line-height: 2.3;
+    color: var(--ink);
+  }
+
+  /* CTA */
+  .cta {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 40px 32px;
+    margin: 4em 0 2em;
+    border-radius: 3px;
+    text-align: center;
+  }
+  .cta-eyebrow {
+    font-size: 10px; letter-spacing: 0.25em;
+    color: var(--warm); margin-bottom: 14px; display: block;
+  }
+  .cta h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 18px; font-weight: 500;
+    color: var(--cream); margin-bottom: 12px; line-height: 1.8;
+  }
+  .cta p { font-size: 13px; color: #c8c2b0; line-height: 2; margin-bottom: 22px; }
+  .cta-btn {
+    display: inline-block; background: var(--warm);
+    color: #fff; text-decoration: none;
+    font-size: 12px; letter-spacing: 0.2em;
+    padding: 12px 32px; border-radius: 2px;
+    transition: opacity 0.2s;
+  }
+  .cta-btn:hover { opacity: 0.85; }
+
+  .footer {
+    font-size: 11px; color: var(--muted);
+    text-align: center; line-height: 2.2; margin-top: 2em;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="tags">
+    <span class="tag">今活</span>
+    <span class="tag">お盆</span>
+    <span class="tag">仏事</span>
+    <span class="tag">日本の文化</span>
+    <span class="tag">無料</span>
+  </div>
+
+  <h1>お盆は、今活だった。<br>日本のしきたりが<br>教えてくれること</h1>
+  <p class="lead">— 先祖と向き合う時間は、今を生きるための時間</p>
+
+  <div class="mao">
+    お盆になると<br>
+    「めんどうだな」と思う人もいる。<br>
+    <span class="g"></span>
+    お墓参り、仏壇の掃除<br>
+    親戚が集まって、また同じ話。<br>
+    <span class="g"></span>
+    でも、ちょっと待ってください。<br>
+    <span class="g"></span>
+    日本のしきたりには<br>
+    ずっと昔から受け継がれてきた<br>
+    <span class="hl">「今を生きるための知恵」</span>が<br>
+    そっと、隠れています。
+  </div>
+
+  <div class="divider"></div>
+
+  <h2>お盆・彼岸・仏事と今活</h2>
+
+  <p>わたしはMAOで「今活（いまかつ）」という言葉を使っています。終活ではなく、今日を丁寧に生きること。</p>
+  <p>日本の伝統的な仏事やしきたりを改めて見ると、それはそのまま「今活」そのものだと気づきます。</p>
+
+  <!-- お盆 -->
+  <div class="culture-card">
+    <span class="c-label">しきたり 01</span>
+    <div class="c-title">お盆（8月13日〜16日）</div>
+    <p class="c-body">
+      先祖の霊が家に帰ってくるとされる期間。迎え火で霊を迎え、送り火で送り出す。仏壇を整え、墓参りをして、家族が集まる。
+    </p>
+    <p class="c-imakatsu">
+      先祖を迎える準備をしながら、自分の「今」を振り返る時間。「あの人だったら、今の自分をどう見るだろう」と問うことが、今活につながります。
+    </p>
+  </div>
+
+  <!-- 彼岸 -->
+  <div class="culture-card">
+    <span class="c-label">しきたり 02</span>
+    <div class="c-title">彼岸（春・秋の年2回）</div>
+    <p class="c-body">
+      春分・秋分を中日とした7日間。「彼岸」は仏教用語で、悟りの世界のこと。この世（此岸）とあの世（彼岸）の距離が最も近くなる時期とされる。
+    </p>
+    <p class="c-imakatsu">
+      年に2度、立ち止まって死を身近に感じる機会。「もしものとき、整っているか」を確認するのに最適な節目です。
+    </p>
+  </div>
+
+  <!-- 納骨・法要 -->
+  <div class="culture-card">
+    <span class="c-label">しきたり 03</span>
+    <div class="c-title">法要・納骨・回忌</div>
+    <p class="c-body">
+      四十九日、一周忌、三回忌……。節目ごとに故人を偲び、遺族が集まる。単なる儀式ではなく、悲しみを時間をかけて手放していくプロセス。
+    </p>
+    <p class="c-imakatsu">
+      グリーフケアの観点からも、法要は「悲しみを段階的に整える」仕組み。日本人はずっと昔から、こころの整理の仕方を知っていました。
+    </p>
+  </div>
+
+  <div class="quote">
+    しきたりは、めんどうなものじゃない。<br>
+    <br>
+    先人たちが「こうすれば、こころが整う」と<br>
+    長い年月をかけて積み上げてきた<br>
+    知恵の結晶です。
+  </div>
+
+  <h2>今年のお盆に、やってみてほしいこと</h2>
+
+  <p>難しいことは何もありません。ひとつだけ選んで、試してみてください。</p>
+
+  <div class="culture-card">
+    <span class="c-label">今活アクション</span>
+    <div class="c-title">「もしものとき」を、先祖に報告するように書く</div>
+    <p class="c-body">
+      エンディングノートや遺品の整理を「義務」としてではなく、「先祖への報告書」のつもりで書いてみる。不思議と、筆が進みます。
+    </p>
+  </div>
+
+  <div class="culture-card">
+    <span class="c-label">今活アクション</span>
+    <div class="c-title">仏壇・位牌の前で、今の自分を話す</div>
+    <p class="c-body">
+      「最近こんなことがありました」と、亡くなった家族に話しかける。一人でも大丈夫。声に出すことで、自分の今が整理されていきます。
+    </p>
+  </div>
+
+  <div class="mao">
+    <span class="g"></span>
+    お盆は、死者のための行事じゃない。<br>
+    <span class="g"></span>
+    生きているわたしたちが<br>
+    「今、どう生きているか」を<br>
+    問い直すための時間。<br>
+    <span class="g"></span>
+    <span class="hl">日本のしきたりは、今活そのものです。</span>
+  </div>
+
+  <div class="cta">
+    <span class="cta-eyebrow">MAO LINE 公式アカウント</span>
+    <h3>お盆前に、整えませんか。<br>一緒に考えます。</h3>
+    <p>
+      今活・終活・グリーフケアについて<br>
+      個別にご相談いただけます。<br>
+      一人で抱えないでください。
+    </p>
+    <a class="cta-btn" href="https://lin.ee/SGVlcAV" target="_blank">LINE で話してみる →</a>
+  </div>
+
+  <p class="footer">
+    一般社団法人MAO｜皆方千尋<br>
+    今活 × こころの整理<br>
+    #今活 #お盆 #彼岸 #仏事 #終活 #グリーフケア #日本文化
+  </p>
+
+</div>
+</body>
+</html>

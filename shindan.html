@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今活タイプ診断 ｜ 一般社団法人MAO</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@400;500;700&family=Klee+One:wght@400;600&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Zen Kaku Gothic New',sans-serif;color:#3d3a34;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(168,184,160,0.18), transparent 40%),
+      radial-gradient(circle at 88% 92%, rgba(196,178,150,0.20), transparent 44%),
+      linear-gradient(165deg,#f7f3ec 0%,#efe9df 60%,#ece5da 100%);
+    min-height:100vh;display:flex;justify-content:center;padding:24px 16px 60px;}
+  .app{width:100%;max-width:560px;}
+  .card{background:#fffdf9;border-radius:28px;border:1px solid #ece4d6;
+    box-shadow:0 10px 30px rgba(120,110,90,0.10);padding:40px 32px;}
+  .center{text-align:center;}
+  .badge{display:inline-block;font-family:'Klee One',serif;font-weight:600;font-size:14px;letter-spacing:0.14em;color:#fff;background:#b08a6a;padding:7px 24px;border-radius:24px;margin-bottom:22px;}
+  .find{font-family:'Klee One',serif;font-size:15px;color:#9aaa90;letter-spacing:0.08em;margin-bottom:10px;font-weight:600;}
+  h1{font-family:'Zen Old Mincho',serif;font-weight:900;font-size:42px;line-height:1.3;color:#4a4640;letter-spacing:0.02em;}
+  h1 .ac{color:#c08a6c;}
+  .lead{font-family:'Zen Old Mincho',serif;font-size:17px;line-height:1.9;color:#6b675f;margin-top:20px;letter-spacing:0.03em;}
+  .lead b{color:#a87b5d;}
+  .start-types{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;}
+  .st{background:#faf6ee;border:1px solid #ece4d6;border-radius:16px;padding:14px;display:flex;align-items:center;gap:10px;}
+  .st .ic{font-size:24px;}
+  .st .nm{font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:17px;color:#46423b;}
+  .btn{width:100%;border:none;cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:20px;letter-spacing:0.05em;color:#fff;background:linear-gradient(135deg,#9aaa90,#86977c);padding:18px;border-radius:40px;box-shadow:0 8px 20px rgba(134,151,124,0.30);transition:transform .15s,box-shadow .15s;margin-top:6px;}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(134,151,124,0.40);}
+  .btn:active{transform:translateY(0);}
+  .btn.sub{background:linear-gradient(135deg,#c08a6c,#b07a5c);box-shadow:0 8px 20px rgba(176,122,92,0.28);}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;box-shadow:none;}
+  .prog-wrap{margin-bottom:24px;}
+  .prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .prog-label{font-size:14px;color:#9a958b;letter-spacing:0.08em;}
+  .prog-count{font-family:'Zen Old Mincho',serif;font-size:16px;color:#a87b5d;font-weight:700;}
+  .prog-bar{height:6px;background:#ece4d6;border-radius:6px;overflow:hidden;}
+  .prog-fill{height:100%;background:linear-gradient(90deg,#9aaa90,#c08a6c);border-radius:6px;transition:width .4s ease;}
+  .q-text{font-family:'Zen Old Mincho',serif;font-size:24px;line-height:1.6;color:#46423b;margin-bottom:28px;letter-spacing:0.02em;min-height:80px;display:flex;align-items:center;}
+  .opt{width:100%;text-align:left;cursor:pointer;background:#faf6ee;border:1.5px solid #ece4d6;border-radius:18px;padding:18px 22px;margin-bottom:13px;font-size:17px;line-height:1.5;color:#56524a;font-weight:500;transition:all .15s;font-family:'Zen Kaku Gothic New',sans-serif;}
+  .opt:hover{border-color:#c9bda4;background:#f6efe3;transform:translateX(3px);}
+  .dob{display:flex;gap:10px;margin:24px 0 8px;}
+  .dob select{flex:1;padding:14px 10px;border-radius:14px;border:1.5px solid #ece4d6;background:#faf6ee;font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#46423b;cursor:pointer;}
+  .dob-note{font-size:13px;color:#a59f93;text-align:center;margin-bottom:6px;letter-spacing:0.04em;}
+  .res-head{text-align:center;margin-bottom:26px;}
+  .res-ic{font-size:64px;margin-bottom:10px;}
+  .res-type{font-family:'Zen Old Mincho',serif;font-weight:900;font-size:38px;color:#4a4640;letter-spacing:0.03em;}
+  .res-sub{font-size:16px;color:#9aaa90;letter-spacing:0.1em;margin-top:8px;font-weight:700;}
+  .res-star{display:inline-block;margin-top:16px;background:#f6ece2;color:#a87b5d;font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:16px;padding:7px 20px;border-radius:22px;letter-spacing:0.05em;}
+  .res-body{font-family:'Zen Old Mincho',serif;font-size:17px;line-height:2.0;color:#56524a;letter-spacing:0.03em;margin:24px 0;}
+  .res-box{background:#faf6ee;border:1px solid #ece4d6;border-radius:18px;padding:22px 24px;margin:20px 0;}
+  .res-box .bx-t{font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:15px;color:#9aaa90;letter-spacing:0.1em;margin-bottom:10px;}
+  .res-box p{font-size:16px;line-height:1.85;color:#56524a;}
+  .res-goal{font-family:'Zen Old Mincho',serif;font-size:22px;line-height:1.7;color:#c08a6c;font-weight:700;text-align:center;margin:24px 0;letter-spacing:0.03em;}
+  .divider{width:50px;height:1.5px;background:#c9bda4;margin:26px auto;position:relative;}
+  .divider::before,.divider::after{content:"";position:absolute;top:50%;width:5px;height:5px;border-radius:50%;background:#c9bda4;transform:translateY(-50%);}
+  .divider::before{left:-14px;}.divider::after{right:-14px;}
+  .cta-line{display:flex;align-items:center;justify-content:center;gap:12px;}
+  .cta-line .lg{background:#fff;color:#4f9a52;font-size:15px;font-weight:700;padding:3px 11px;border-radius:8px;}
+  .mini{text-align:center;font-size:14px;color:#a59f93;margin-top:14px;letter-spacing:0.08em;}
+  .restart{display:block;margin:18px auto 0;background:none;border:none;color:#a59f93;font-size:14px;cursor:pointer;text-decoration:underline;letter-spacing:0.05em;font-family:'Zen Kaku Gothic New',sans-serif;}
+  .brand{text-align:center;font-family:'Zen Old Mincho',serif;font-size:15px;letter-spacing:0.24em;color:#9a958b;margin-top:30px;padding-left:0.24em;}
+  .fade{animation:fade .5s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @media(max-width:480px){.card{padding:32px 22px;}h1{font-size:34px;}.q-text{font-size:21px;}.res-type{font-size:32px;}}
+</style>
+</head>
+<body>
+<div class="app"><div class="card" id="card"></div></div>
+<script>
+var TYPES={
+  en:{name:'縁側タイプ',ic:'🌿',sub:'TSUNAGARU / つながる',
+    goal:'大切な人との時間を、積み重ねていく。',
+    body:'あなたにとって人生の宝物は、もの でも 財産 でもなく、誰かと過ごす あたたかな時間。家族、友、これから出会う人——そのつながりの中に、生きる意味を見いだす人です。終活も、相続も、あなたにとっては「遺された人への、愛の準備」。手続きの先にあるのは、安心して手わたせる未来です。',
+    advice:'まずは、会いたい人に会いに行く時間を。整えるべきものは、その時間を守るために整える——そんな順番でいいのです。'},
+  mori:{name:'森タイプ',ic:'🕯',sub:'FUKAMERU / 深める',
+    goal:'心の充足を、静かに見つめていく。',
+    body:'あなたが本当に求めているのは、外側の安定よりも、内側の満たされ。一人の時間、祈りの時間、静けさの中でこそ、あなたは深く呼吸ができる人です。「これで足りているか」という問いを、あなたは恐れません。その問いこそが、あなたを深いところへ導いてくれます。',
+    advice:'忙しさの中に、ろうそく一本ぶんの静けさを。心が満ちる時間を、予定として持つことから始めてみて。'},
+  tsubasa:{name:'翼タイプ',ic:'🕊',sub:'JIYU / 自由になる',
+    goal:'自分の人生を、自分の手に取り戻す。',
+    body:'あなたは、誰かの期待や「こうあるべき」から、そっと自由になりたいと願っている人。残りの人生は、自分の意思で選びたい。その静かな反骨心は、わがままではなく、あなたが あなたを生きるための、まっとうな願いです。手放すべきは、もう要らない役割や肩書き。',
+    advice:'「やらなくていいこと」を、ひとつ決めてみて。空いた場所に、あなたが本当にやりたかったことが入ってきます。'},
+  daichi:{name:'大地タイプ',ic:'🍂',sub:'TEBANASU / 手放す',
+    goal:'手放して、軽やかに生きていく。',
+    body:'あなたは、たくさんの ものや しがらみを抱えるより、身軽でいたい人。整理し、手放すことに、心地よさを感じます。それは冷たさではなく、本当に大切なものだけを残すための、潔さ。あなたの生前整理は、片付けではなく「これからを軽やかに生きる」ための、前向きな選択です。',
+    advice:'まず一箇所、ひきだし一つから。手放すたびに、心まで軽くなる感覚を、味わってみて。'}
+};
+var Q=[
+ {t:'もし、まとまった自由な一日があったら？',o:[['大切な人と一緒に過ごす','en'],['一人で静かに過ごす','mori'],['行きたかった場所へ出かける','tsubasa'],['家を片付けてすっきりさせる','daichi']]},
+ {t:'「老後の安心」と聞いて、まず思うのは？',o:[['そばにいてくれる人がいること','en'],['心が満たされていること','mori'],['誰にも縛られないこと','tsubasa'],['身軽で物が少ないこと','daichi']]},
+ {t:'家の中で、いちばん心が落ち着く場所は？',o:[['家族と過ごす居間','en'],['静かに過ごせる自分の部屋','mori'],['外の景色が見える窓辺','tsubasa'],['きれいに片付いた空間','daichi']]},
+ {t:'「終活」という言葉に、近い気持ちは？',o:[['遺す人への準備','en'],['自分と向き合う時間','mori'],['自分らしく締めくくる','tsubasa'],['身辺をすっきり整える','daichi']]},
+ {t:'これからの人生で、増やしたいのは？',o:[['人と会う時間','en'],['心が動く体験','mori'],['自分で決める自由','tsubasa'],['余白とゆとり','daichi']]},
+ {t:'もらって嬉しいのは、どんな贈り物？',o:[['一緒に過ごす時間','en'],['心に残る一冊や音楽','mori'],['どこかへの旅のチケット','tsubasa'],['上質で長く使える一つ','daichi']]},
+ {t:'写真を整理するとき、あなたは？',o:[['人が写ったものを大切に残す','en'],['思い出に浸りながらゆっくり','mori'],['お気に入りだけ厳選する','tsubasa'],['思いきってどんどん手放す','daichi']]},
+ {t:'「これだけは譲れない」と感じるのは？',o:[['大切な人とのつながり','en'],['自分の心の平穏','mori'],['自分の生き方の自由','tsubasa'],['身軽でいられること','daichi']]},
+ {t:'ふと、人生をふりかえる夜。考えるのは？',o:[['誰と笑い合ってきたか','en'],['自分は満たされていたか','mori'],['やりたいことをやれたか','tsubasa'],['身軽に生きてこれたか','daichi']]},
+ {t:'これからの自分に、かけたい言葉は？',o:[['ひとりじゃないよ','en'],['そのままでいい','mori'],['もう、自由でいい','tsubasa'],['軽やかにいこう','daichi']]}
+];
+var STARS={
+ 1:{n:'一白水星',el:'水',word:'流れに身をまかせ、深く静かに進む年まわり。柔らかさが、あなたの強さです。'},
+ 2:{n:'二黒土星',el:'土',word:'大地のように、人を支え育てる星。あなたの献身は、めぐりめぐって返ってきます。'},
+ 3:{n:'三碧木星',el:'木',word:'若木のように、新しいことへ踏み出す力を持つ星。声をあげること、始めることを恐れずに。'},
+ 4:{n:'四緑木星',el:'木',word:'風のように人と人をつなぐ星。あなたの縁(えにし)が、人生を豊かにしていきます。'},
+ 5:{n:'五黄土星',el:'土',word:'中心に立ち、すべてを束ねる強い星。あなたが整えば、まわりも整っていきます。'},
+ 6:{n:'六白金星',el:'金',word:'天空のように高い志を持つ星。筋を通すあなたの姿が、信頼を生みます。'},
+ 7:{n:'七赤金星',el:'金',word:'実りと喜びを分かち合う星。あなたの周りには、自然と笑顔が集まります。'},
+ 8:{n:'八白土星',el:'土',word:'山のように、変化を受けとめ積み上げる星。転機こそ、あなたの飛躍のときです。'},
+ 9:{n:'九紫火星',el:'火',word:'灯火(ともしび)のように、人を照らし導く星。あなたの感性が、道を照らします。'}
+};
+function honmei(y,m,d){var yy=y;if(m===1||(m===2&&d<=3))yy=y-1;
+ function dsum(n){var s=0;String(n).split('').forEach(function(c){s+=+c;});return s;}
+ var s=dsum(yy);while(s>=10)s=dsum(s);var n=11-s;if(n>9)n-=9;if(n===0)n=9;return n;}
+
+var card=document.getElementById('card');
+var qi=0, score={en:0,mori:0,tsubasa:0,daichi:0}, sel={y:'',m:'',d:''};
+
+function intro(){
+  card.className='card fade';
+  card.innerHTML=
+   '<div class="center"><span class="badge">かんたん 2 分</span>'+
+   '<div class="find">Find your "Imakatsu" type</div>'+
+   '<h1>今活タイプ<span class="ac">診断</span></h1>'+
+   '<div class="lead">10の問いに答えるだけで、<br>あなたの<b>本当のゴール</b>が見えてくる。<br>さらに、<b>九星</b>からのメッセージも。</div></div>'+
+   '<div class="start-types">'+
+   '<div class="st"><span class="ic">🌿</span><span class="nm">縁側タイプ</span></div>'+
+   '<div class="st"><span class="ic">🕯</span><span class="nm">森タイプ</span></div>'+
+   '<div class="st"><span class="ic">🕊</span><span class="nm">翼タイプ</span></div>'+
+   '<div class="st"><span class="ic">🍂</span><span class="nm">大地タイプ</span></div></div>'+
+   '<button class="btn" id="go">診断をはじめる</button>'+
+   '<div class="brand">一般社団法人 MAO</div>';
+  document.getElementById('go').onclick=function(){qi=0;score={en:0,mori:0,tsubasa:0,daichi:0};quiz();};
+}
+function quiz(){
+  var q=Q[qi];
+  card.className='card';
+  var opts='';
+  for(var i=0;i<q.o.length;i++){opts+='<button class="opt" data-k="'+q.o[i][1]+'">'+q.o[i][0]+'</button>';}
+  card.innerHTML=
+   '<div class="prog-wrap"><div class="prog-top"><span class="prog-label">今活タイプ診断</span>'+
+   '<span class="prog-count">'+(qi+1)+' / '+Q.length+'</span></div>'+
+   '<div class="prog-bar"><div class="prog-fill" style="width:'+((qi+1)/Q.length*100)+'%"></div></div></div>'+
+   '<div class="q-text fade">'+q.t+'</div><div class="fade">'+opts+'</div>';
+  var bs=card.querySelectorAll('.opt');
+  bs.forEach(function(b){b.onclick=function(){score[b.getAttribute('data-k')]++;if(qi+1<Q.length){qi++;quiz();}else{dob();}};});
+}
+function dob(){
+  card.className='card fade';
+  var yrs='';for(var y=2010;y>=1930;y--)yrs+='<option value="'+y+'">'+y+'年</option>';
+  var mos='';for(var m=1;m<=12;m++)mos+='<option value="'+m+'">'+m+'月</option>';
+  var dys='';for(var d=1;d<=31;d++)dys+='<option value="'+d+'">'+d+'日</option>';
+  card.innerHTML=
+   '<div class="center"><div class="find">あと、ひとつだけ</div>'+
+   '<h1 style="font-size:30px">生まれた日を<br>教えてください</h1>'+
+   '<div class="lead">あなたの<b>九星(本命星)</b>から、<br>今のあなたへのメッセージをお届けします。</div></div>'+
+   '<div class="dob"><select id="sy"><option value="">年</option>'+yrs+'</select>'+
+   '<select id="sm"><option value="">月</option>'+mos+'</select>'+
+   '<select id="sd"><option value="">日</option>'+dys+'</select></div>'+
+   '<div class="dob-note">※ 結果を表示するためだけに使います</div>'+
+   '<button class="btn sub" id="res" disabled>結果をみる</button>';
+  var sy=document.getElementById('sy'),sm=document.getElementById('sm'),sd=document.getElementById('sd'),rb=document.getElementById('res');
+  function chk(){rb.disabled=!(sy.value&&sm.value&&sd.value);}
+  sy.onchange=sm.onchange=sd.onchange=chk;
+  rb.onclick=function(){sel={y:+sy.value,m:+sm.value,d:+sd.value};result();};
+}
+function result(){
+  var best='en',bv=-1;
+  for(var k in score){if(score[k]>bv){bv=score[k];best=k;}}
+  var t=TYPES[best];
+  var star=STARS[honmei(sel.y,sel.m,sel.d)];
+  card.className='card fade';
+  card.innerHTML=
+   '<div class="res-head"><div class="res-ic">'+t.ic+'</div>'+
+   '<div class="res-sub">'+t.sub+'</div>'+
+   '<div class="res-type">あなたは「'+t.name+'」</div>'+
+   '<div class="res-star">✦ '+star.n+'（'+star.el+'）の生まれ</div></div>'+
+   '<div class="res-goal">'+t.goal+'</div>'+
+   '<div class="res-body">'+t.body+'</div>'+
+   '<div class="res-box"><div class="bx-t">九星からのメッセージ</div><p>'+star.word+'</p></div>'+
+   '<div class="res-box"><div class="bx-t">今活の、はじめの一歩</div><p>'+t.advice+'</p></div>'+
+   '<div class="divider"></div>'+
+   '<div class="center"><div class="lead" style="margin-top:0;margin-bottom:20px">あなただけの「本当のゴール」を、<br>一緒に見つめてみませんか。</div>'+
+   '<button class="btn" id="line"><span class="cta-line"><span class="lg">LINE</span>個別診断・相談へ</span></button>'+
+   '<div class="mini">＼ 友だち追加だけ・無料です ／</div>'+
+   '<button class="restart" id="again">もう一度診断する</button></div>'+
+   '<div class="brand">一般社団法人 MAO</div>';
+  document.getElementById('line').onclick=function(){window.open('https://lin.ee/SGVlcAV','_blank');};
+  document.getElementById('again').onclick=intro;
+}
+intro();
+</script>
+</body>
+</html>

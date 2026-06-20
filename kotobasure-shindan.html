@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>異性との言葉のすれ違い診断</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Kaku Gothic ProN', sans-serif;
+            background-color: #f8f7f5;
+            color: #4a4a4a;
+            line-height: 1.8;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ヘッダー */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: #3d7a7a;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #888;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* 開始画面 */
+        .start-screen {
+            background-color: white;
+            border-radius: 8px;
+            padding: 40px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .start-screen h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #3d7a7a;
+        }
+
+        .start-screen p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .start-btn {
+            background-color: #3d7a7a;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .start-btn:hover {
+            background-color: #2d5a5a;
+            transform: translateY(-2px);
+        }
+
+        /* 質問画面 */
+        .quiz-screen {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            padding: 35px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .progress {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .progress-bar {
+            width: 40px;
+            height: 3px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            transition: background-color 0.3s ease;
+        }
+
+        .progress-bar.active {
+            background-color: #3d7a7a;
+        }
+
+        .question-number {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .question-text {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 28px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background-color: #f8f7f5;
+            border: 2px solid #e0e0e0;
+            padding: 16px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            text-align: left;
+            color: #555;
+        }
+
+        .option:hover {
+            border-color: #3d7a7a;
+            background-color: #f0f5f5;
+        }
+
+        .option.selected {
+            border-color: #3d7a7a;
+            background-color: #e8f1f1;
+            color: #2d5a5a;
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .prev-btn, .next-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            background-color: white;
+            color: #666;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .prev-btn:hover, .next-btn:hover {
+            border-color: #3d7a7a;
+            color: #3d7a7a;
+        }
+
+        .next-btn {
+            background-color: #3d7a7a;
+            color: white;
+            border-color: #3d7a7a;
+        }
+
+        .next-btn:hover {
+            background-color: #2d5a5a;
+        }
+
+        .prev-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 結果画面 */
+        .result-screen {
+            display: none;
+        }
+
+        .result-box {
+            background-color: white;
+            border-radius: 8px;
+            padding: 40px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 20px;
+            color: #3d7a7a;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .type-name {
+            font-size: 24px;
+            color: #3d7a7a;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .result-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .result-description p {
+            margin-bottom: 12px;
+        }
+
+        .characteristic {
+            background-color: #f0f5f5;
+            padding: 18px;
+            border-left: 4px solid #3d7a7a;
+            margin-bottom: 20px;
+            border-radius: 2px;
+        }
+
+        .characteristic-title {
+            font-weight: 600;
+            color: #2d5a5a;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .characteristic-text {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .message {
+            background-color: #faf8f5;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+            border-left: 3px solid #c9a97d;
+        }
+
+        .consultation-cta {
+            background: linear-gradient(135deg, #3d7a7a 0%, #2d5a5a 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .consultation-cta h3 {
+            font-size: 15px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .consultation-cta p {
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            opacity: 0.95;
+        }
+
+        .consultation-btn {
+            display: inline-block;
+            background-color: white;
+            color: #3d7a7a;
+            padding: 12px 28px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .consultation-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .retry-btn {
+            background-color: #f8f7f5;
+            color: #3d7a7a;
+            border: 2px solid #3d7a7a;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .retry-btn:hover {
+            background-color: #e8f1f1;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0;
+            }
+
+            .quiz-screen, .result-box, .start-screen {
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .question-text {
+                font-size: 15px;
+            }
+
+            .type-name {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>異性との言葉のすれ違い診断</h1>
+            <p>コミュニケーションのパターンを知ることで<br>相手との関係が変わる</p>
+        </div>
+
+        <!-- 開始画面 -->
+        <div class="start-screen" id="startScreen">
+            <h2>はじめに</h2>
+            <p>異性との関係では<br>「同じ言葉」でも<br>「受け取り方」が違うことがあります。<br><br>あなたのコミュニケーションスタイルと<br>言葉のすれ違いパターンを知ることで<br>相手との距離が変わるかもしれません。</p>
+            <a href="https://lin.ee/SGVlcAV" target="_blank" class="start-btn" style="display: inline-block; text-decoration: none; color: white;">LINE相談へ</a>
+        </div>
+
+        <!-- 質問画面 -->
+        <div class="quiz-screen" id="quizScreen">
+            <div class="progress" id="progressBar"></div>
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question-text" id="questionText"></div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="button-group">
+                <button class="prev-btn" id="prevBtn" onclick="previousQuestion()" disabled>戻る</button>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>次へ</button>
+            </div>
+        </div>
+
+        <!-- 結果画面 -->
+        <div class="result-screen" id="resultScreen">
+            <div class="result-box">
+                <div class="result-title">あなのタイプ</div>
+                <div class="type-name" id="typeName"></div>
+                <div class="result-description" id="typeDescription"></div>
+                <div id="characteristics"></div>
+                <div class="message" id="message"></div>
+                <div class="consultation-cta">
+                    <h3>もっと詳しく知りたい方へ</h3>
+                    <p>あなたのコミュニケーションスタイルについて<br>LINEで個別相談ができます。</p>
+                    <a href="https://lin.ee/SGVlcAV" target="_blank" class="consultation-btn">LINEで相談する</a>
+                </div>
+                <button class="retry-btn" onclick="resetQuiz()">もう一度診断する</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© MAO | 一般社団法人MAO</p>
+        </div>
+    </div>
+
+    <script>
+        // 診断データ
+        const questions = [
+            {
+                text: "相手から「後で連絡するね」と言われました。何日連絡がないと、不安になりますか？",
+                options: [
+                    { text: "その日のうちに来ないと、何か起きたのか心配になる", score: [1, 0, 0] },
+                    { text: "2〜3日で理由を聞きたくなる", score: [1, 1, 0] },
+                    { text: "一週間くらいなら大丈夫。忙しいのかなと思う", score: [0, 1, 1] }
+                ]
+            },
+            {
+                text: "相手が何か言いたそうだけど、言わない時、あなたはどうしますか？",
+                options: [
+                    { text: "相手の気持ちを汲み取ろうとして、色々想像する", score: [0, 1, 0] },
+                    { text: "率直に『何か言いたいことある？』と聞く", score: [1, 0, 0] },
+                    { text: "相手が話しやすくなるのを待つ", score: [0, 0, 1] }
+                ]
+            },
+            {
+                text: "約束をすることについて、どう思いますか？",
+                options: [
+                    { text: "できるかどうかわからないなら、約束はしたくない", score: [1, 0, 0] },
+                    { text: "約束は心の結びつき。果たしたい気持ちが強い", score: [0, 1, 0] },
+                    { text: "状況で変わるから、柔軟に対応したい", score: [0, 0, 1] }
+                ]
+            },
+            {
+                text: "相手を傷つけないように、本当のことを言わないことがありますか？",
+                options: [
+                    { text: "言わない。正直さが大切だと思う", score: [1, 0, 0] },
+                    { text: "よくある。相手のことを思うから", score: [0, 1, 0] },
+                    { text: "時と場合による", score: [0, 0, 1] }
+                ]
+            },
+            {
+                text: "相手と意見が違う時、あなたはどうしますか？",
+                options: [
+                    { text: "自分の考えをはっきり伝える", score: [1, 0, 0] },
+                    { text: "相手の気持ちを理解しようとして、自分の意見は後回しになる", score: [0, 1, 0] },
+                    { text: "話し合いながら、落としどころを探す", score: [0, 0, 1] }
+                ]
+            },
+            {
+                text: "「大丈夫？」と聞かれた時、本当は辛くても『大丈夫』と言うことがありますか？",
+                options: [
+                    { text: "言わない。問題は解決するべき", score: [1, 0, 0] },
+                    { text: "よくある。相手に心配させたくない", score: [0, 1, 0] },
+                    { text: "時々。状況による", score: [0, 0, 1] }
+                ]
+            },
+            {
+                text: "相手が約束を破った時、どう感じますか？",
+                options: [
+                    { text: "信頼が揺らぐ。理由を聞きたい", score: [1, 0, 0] },
+                    { text: "相手は何か理由があるはず。悪気はないと思う", score: [0, 1, 0] },
+                    { text: "理由があれば仕方ない。柔軟に対応したい", score: [0, 0, 1] }
+                ]
+            },
+            {
+                text: "人間関係で一番大切だと思うことは？",
+                options: [
+                    { text: "誠実さと信頼。言ったことは果たすこと", score: [1, 0, 0] },
+                    { text: "相手の気持ちを理解し、寄り添うこと", score: [0, 1, 0] },
+                    { text: "お互いに心地よく、無理がないこと", score: [0, 0, 1] }
+                ]
+            }
+        ];
+
+        // タイプ定義（6タイプ）
+        const types = {
+            "A": { // 直接的・理性的・主体的 [3, 0, 0]
+                name: "直言型",
+                description: "<p>自分の考えをはっきり伝え、論理的に考える傾向があります。</p><p>相手の言葉は字義通りに受け取ることが多く、「何か言いたいことがあるなら言ってほしい」と思っています。</p>",
+                characteristic: "正直さと誠実さを大切にしており、曖昧さや「建前」が苦手です。相手が約束を破ったり、言葉とは違う行動をすると、信頼が揺らぎます。",
+                message: "相手が『本音を言わない』と感じたら、『何か言いたいことはある？』と優しく聞いてみてください。多くのすれ違いは『言ったことが伝わらない』ではなく『言わないこと』から始まります。"
+            },
+            "B": { // 感受的・感情的・受動的 [0, 3, 0]
+                name: "察する型",
+                description: "<p>相手の感情や気持ちを敏感に感じ取ります。</p><p>言葉の裏側を読もうとするため、時には「言われていないこと」を想像して傷ついてしまうことがあります。</p>",
+                characteristic: "相手を傷つけないように配慮するあまり、自分の本音を後回しにしてしまう傾向があります。深く考えて、慎重に言葉を選びます。",
+                message: "あなたの優しさは大切ですが、時には『自分の気持ちも大事』であることを相手に伝えてください。相手が本当に求めているのは『完璧な配慮』ではなく『素の あなた』かもしれません。"
+            },
+            "C": { // 柔軟・感情的・受動的 [0, 0, 3]
+                name: "調和型",
+                description: "<p>相手と心地よい関係を保つことを大切にします。</p><p>状況や相手に合わせて、柔軟に対応する傾向があります。ルールや約束よりも『その時々の気持ち』を優先します。</p>",
+                characteristic: "「無理がない」「気楽」という環境を好みます。相手に頼るところもあり、完全には自立したいと思わない部分があります。",
+                message: "あなたの『柔軟性』は貴重ですが、相手によっては『約束が曖昧』に見えることがあります。大事な約束の時は、相手に『これは大切だから、守りたい』と伝えてみてください。"
+            },
+            "AB": { // 直接的・感受的 [1.5, 1.5, 0]
+                name: "葛藤型",
+                description: "<p>正直さと思いやりの両立に葛藤します。</p><p>相手を傷つけたくないけれど、隠すことも苦手です。そのため『言うべきか、言わないべきか』で迷うことが多いです。</p>",
+                characteristic: "相手の気持ちが気になる一方で、本当のことを言いたい衝動も強い。結果として『何かぎこちない』空気が生まれることがあります。",
+                message: "相手との関係を損なわない『正直な伝え方』を工夫してみてください。『言うことが大事』ではなく『どう言うか』『いつ言うか』が変わることで、相手も受け取り方が変わります。"
+            },
+            "AC": { // 直接的・柔軟 [1.5, 0, 1.5]
+                name: "現実的型",
+                description: "<p>その時々の状況に応じて、判断を変える現実的な人です。</p><p>理想や約束よりも『実際に何ができるか』『その時いどう解決するか』を重視します。</p>",
+                characteristic: "相手によって対応を変えるため、『約束が曖昧』と感じられることもあります。同時に『状況判断が上手』という長所もあります。",
+                message: "あなたの現実的さはビジネスでは強みですが、感情の深い関係では『ぶれている』と見えることがあります。相手に『これは大事な約束』『この時は柔軟に対応する』と明確に伝えることで、誤解が減ります。"
+            },
+            "BC": { // 感受的・柔軟 [0, 1.5, 1.5]
+                name: "共感型",
+                description: "<p>相手の気持ちに深く共感し、その時々で対応を柔軟に変えます。</p><p>『その人その人に合わせる』ことが自然にできる、優れた適応能力の持ち主です。</p>",
+                characteristic: "相手によって態度が変わるため、一貫性が欠けるように見えることがあります。同時に『誰とでも上手くやれる』という強みがあります。",
+                message: "あなたの共感力と柔軟性は貴重です。ただ『人によって違う対応』が多いと『信頼できない』と感じる人もいます。時には『これは私の気持ちだ』と一貫した立場を示すことも大切です。"
+            }
+        };
+
+        let currentQuestion = 0;
+        let scores = [0, 0, 0];
+        let selectedAnswerIndex = -1;
+
+        // 初期化
+        function init() {
+            renderProgress();
+        }
+
+        // クイズ開始
+        function startQuiz() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            renderQuestion();
+        }
+
+        // 質問の描画
+        function renderQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `Q${currentQuestion + 1} / ${questions.length}`;
+            document.getElementById('questionText').textContent = question.text;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option' + (index === selectedAnswerIndex ? ' selected' : '');
+                optionDiv.textContent = option.text;
+                optionDiv.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            updateButtonStates();
+        }
+
+        // 答えを選択
+        function selectAnswer(index) {
+            selectedAnswerIndex = index;
+            const question = questions[currentQuestion];
+            scores[0] += question.options[index].score[0];
+            scores[1] += question.options[index].score[1];
+            scores[2] += question.options[index].score[2];
+            renderQuestion();
+        }
+
+        // 次の質問へ
+        function nextQuestion() {
+            if (selectedAnswerIndex === -1) return;
+            selectedAnswerIndex = -1;
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        // 前の質問へ
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                const question = questions[currentQuestion];
+                const selectedOption = questions[currentQuestion].options[selectedAnswerIndex];
+                scores[0] -= selectedOption.score[0];
+                scores[1] -= selectedOption.score[1];
+                scores[2] -= selectedOption.score[2];
+                
+                currentQuestion--;
+                selectedAnswerIndex = -1;
+                renderQuestion();
+            }
+        }
+
+        // ボタン状態の更新
+        function updateButtonStates() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').disabled = selectedAnswerIndex === -1;
+            renderProgress();
+        }
+
+        // プログレスバーの描画
+        function renderProgress() {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'progress-bar' + (i <= currentQuestion ? ' active' : '');
+                progressBar.appendChild(bar);
+            }
+        }
+
+        // タイプを判定
+        function getTypeKey() {
+            const max = Math.max(scores[0], scores[1], scores[2]);
+            const typeMap = {
+                '3,0,0': 'A',
+                '0,3,0': 'B',
+                '0,0,3': 'C',
+                '2,1,0': 'AB',
+                '1,2,0': 'AB',
+                '2,0,1': 'AC',
+                '1,0,2': 'AC',
+                '0,2,1': 'BC',
+                '0,1,2': 'BC'
+            };
+            const key = scores.join(',');
+            return typeMap[key] || 'B';
+        }
+
+        // 結果を表示
+        function showResult() {
+            const typeKey = getTypeKey();
+            const type = types[typeKey];
+            
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            
+            document.getElementById('typeName').textContent = type.name;
+            document.getElementById('typeDescription').innerHTML = type.description;
+            
+            const charDiv = document.getElementById('characteristics');
+            charDiv.innerHTML = `
+                <div class="characteristic">
+                    <div class="characteristic-title">あなたの特徴</div>
+                    <div class="characteristic-text">${type.characteristic}</div>
+                </div>
+            `;
+            
+            document.getElementById('message').textContent = type.message;
+        }
+
+        // 診断をリセット
+        function resetQuiz() {
+            currentQuestion = 0;
+            scores = [0, 0, 0];
+            selectedAnswerIndex = -1;
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+        }
+
+        // 初期化実行
+        init();
+    </script>
+</body>
+</html>

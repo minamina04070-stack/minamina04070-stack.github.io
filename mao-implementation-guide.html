@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAO診断ツール - 実装ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Yu Gothic Medium', 'Noto Sans JP', system-ui, sans-serif;
+            background: #FAFAF8;
+            color: #3A3A38;
+            line-height: 1.8;
+            letter-spacing: 0.05em;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #B8D4C8 0%, #8B9E96 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            letter-spacing: 0.1em;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section h2 {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 30px;
+            color: #3A3A38;
+            border-bottom: 3px solid #B8D4C8;
+            padding-bottom: 15px;
+        }
+
+        .subsection {
+            margin-bottom: 30px;
+        }
+
+        .subsection h3 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #8B9E96;
+            letter-spacing: 0.1em;
+        }
+
+        .subsection p {
+            font-size: 14px;
+            margin-bottom: 12px;
+            line-height: 1.9;
+        }
+
+        .code-block {
+            background: #F5F3F0;
+            padding: 20px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #B8D4C8;
+        }
+
+        .file-list {
+            background: #F5F3F0;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .file-icon {
+            width: 20px;
+            height: 20px;
+            background: #B8D4C8;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .file-name {
+            flex: 1;
+            font-family: monospace;
+        }
+
+        .file-desc {
+            font-size: 12px;
+            color: #8B9E96;
+        }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            width: 30px;
+            height: 30px;
+            background: #B8D4C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .highlight {
+            background: #E8DCC8;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .template-box {
+            background: #F5F3F0;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #B8D4C8;
+        }
+
+        .template-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #8B9E96;
+            margin-bottom: 15px;
+            letter-spacing: 0.1em;
+        }
+
+        .template-text {
+            font-size: 13px;
+            line-height: 2;
+            color: #3A3A38;
+            white-space: pre-wrap;
+            font-family: 'Yu Gothic Medium', 'Noto Sans JP', system-ui, sans-serif;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #B8D4C8;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin: 5px 5px 5px 0;
+            letter-spacing: 0.1em;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #F5F3F0;
+            padding: 12px;
+            text-align: left;
+            font-weight: 500;
+            color: #8B9E96;
+            border-bottom: 2px solid #B8D4C8;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #E8DCC8;
+        }
+
+        .footer {
+            background: #F5F3F0;
+            padding: 40px;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 60px;
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: #8B9E96;
+            margin-bottom: 15px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #B8D4C8;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 2px;
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: #8B9E96;
+            transform: translateY(-2px);
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .section h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <div class="header">
+        <h1>MAO 整理診断ツール</h1>
+        <p>実装ガイド＆SNS連携マニュアル</p>
+    </div>
+
+    <div class="container">
+        <!-- セクション 1: ファイル構成 -->
+        <div class="section">
+            <h2>📁 ファイル構成</h2>
+            
+            <div class="subsection">
+                <h3>作成されたファイル一覧</h3>
+                <div class="file-list">
+                    <div class="file-item">
+                        <div class="file-icon">📄</div>
+                        <div style="flex: 1;">
+                            <div class="file-name">mao-diagnosis-tool.html</div>
+                            <div class="file-desc">メイン診断ツール（インタラクティブ）</div>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon">🎬</div>
+                        <div style="flex: 1;">
+                            <div class="file-name">mao-reels-promotion.html</div>
+                            <div class="file-desc">Instagram Reels用プロモーション画像テンプレート</div>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon">✨</div>
+                        <div style="flex: 1;">
+                            <div class="file-name">mao-animations.html</div>
+                            <div class="file-desc">SNS用アニメーション（6種類）</div>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-icon">📋</div>
+                        <div style="flex: 1;">
+                            <div class="file-name">mao-implementation-guide.html</div>
+                            <div class="file-desc">このファイル（実装ガイド）</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- セクション 2: インストール＆セットアップ -->
+        <div class="section">
+            <h2>🚀 セットアップ手順</h2>
+            
+            <div class="subsection">
+                <h3>1. GitHub Pages へのアップロード</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>GitHub リポジトリを作成</strong><br>
+                        <code class="code-block">minamina04070-stack.github.io</code>
+                    </li>
+                    <li>
+                        <strong>ファイルをアップロード</strong><br>
+                        <code class="code-block">git add mao-diagnosis-tool.html
+git commit -m "Add MAO diagnosis tool"
+git push origin main</code>
+                    </li>
+                    <li>
+                        <strong>公開URL</strong><br>
+                        <code class="code-block">https://minamina04070-stack.github.io/mao-diagnosis-tool.html</code>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="subsection">
+                <h3>2. Instagram Reels 用画像の作成</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>mao-reels-promotion.html をブラウザで開く</strong>
+                    </li>
+                    <li>
+                        <strong>各パターンをスマートフォンで表示</strong><br>
+                        （必ずモバイルビューで表示）
+                    </li>
+                    <li>
+                        <strong>スクリーンショット撮影</strong><br>
+                        各パターン × 複数アングル
+                    </li>
+                    <li>
+                        <strong>Canva で編集</strong><br>
+                        テンプレート「Instagram Reels」(1080×1920px) で編集
+                    </li>
+                </ol>
+            </div>
+
+            <div class="subsection">
+                <h3>3. Make.com で自動配信設定</h3>
+                <p>
+                    次のステップで Make.com ワークフローを構成します：
+                </p>
+                <div class="code-block">
+1. Threads に投稿 (MAOスタイル)
+   ↓
+2. Instagram に転送（@minakata7haco）
+   ↓
+3. Pinterest に投稿（@mao_imakatsu）
+   ↓
+4. LINE 公式に配信（lin.ee/SGVlcAV）
+                </div>
+            </div>
+        </div>
+
+        <!-- セクション 3: SNS別コンテンツ戦略 -->
+        <div class="section">
+            <h2>📱 SNS別コンテンツ戦略</h2>
+
+            <div class="subsection">
+                <h3>Threads / Instagram （@minakata7haco）</h3>
+                <div class="template-box">
+                    <div class="template-title">投稿テンプレート（MAOスタイル）</div>
+                    <div class="template-text">いま、整理する。
+
+あなたの現在地を
+静かに見つめるために。
+
+生前整理や終活は
+「準備」ではなく
+「今、この瞬間を生きる」こと。
+
+4つの視点から
+あなたの整理状況を確認してみませんか？
+
+✨ 診断は無料
+✨ 結果はすぐにお手元に
+✨ LINEでアドバイスも受けられます
+
+@imakatsu_note では
+さらに詳しい情報を配信中
+
+#今活 #生前整理 #終活 #グリーフケア #MAO</div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>note （「MAOとこころの整理」）</h3>
+                <div class="template-box">
+                    <div class="template-title">記事導入文テンプレート</div>
+                    <div class="template-text">「整理」という言葉は、
+多くの人を不安にさせます。
+
+遺品整理、生前整理、終活...
+どれも、どこから始めたらいいか
+分からないと感じている方が
+ほとんどではないでしょうか。
+
+けれど、整理とは
+「今を生きる」ために必要なもの。
+
+あなたの現在地が見えると、
+心はぐっと軽くなります。
+
+この記事では、MAOが開発した
+「4つの視点からの整理診断」を
+ご紹介します。
+
+診断は無料。
+あなたのペースで、
+いますぐ始められます。</div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>LINE 公式アカウント（lin.ee/SGVlcAV）</h3>
+                <div class="template-box">
+                    <div class="template-title">リッチメニュー追加テンプレート</div>
+                    <div class="template-text">【新機能】整理診断が追加されました
+
+───────────────────
+
+いま、整理する。
+
+あなたの心と向き合う
+4つの視点からの診断ツール。
+
+矢印下のボタンからお試しください。
+
+🔗 診断を開く
+   ↓
+  [mao-diagnosis-tool.html)
+
+───────────────────
+
+📝 ご質問やご不安がありましたら
+   いつでもお気軽にご連絡ください。
+
+あなたのペースで、
+いまを生きることが大切です。</div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>Pinterest （@mao_imakatsu）</h3>
+                <p>
+                    <span class="badge">ボード: 今活のことば</span>
+                    <span class="badge">ボード: グリーフケア</span>
+                    <span class="badge">ボード: 終活・エンディングノート</span>
+                </p>
+                <div class="code-block">
+Pinterest ピン設定：
+─────────────────
+タイトル: いま、整理する。診断ツール
+説明: あなたの現在地を4つの視点から見つめます
+リンク: https://minamina04070-stack.github.io/mao-diagnosis-tool.html
+キーワード: #今活 #整理 #グリーフケア #終活
+                </div>
+            </div>
+        </div>
+
+        <!-- セクション 4: Reels 動画制作 -->
+        <div class="section">
+            <h2>🎥 Instagram Reels 動画制作ガイド</h2>
+
+            <div class="subsection">
+                <h3>構成案（全30秒）</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>時間</th>
+                                <th>パターン</th>
+                                <th>テキスト</th>
+                                <th>BGM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0-3秒</td>
+                                <td>パターン1（スタート）</td>
+                                <td>その1</td>
+                                <td>静かな音</td>
+                            </tr>
+                            <tr>
+                                <td>3-8秒</td>
+                                <td>パターン1</td>
+                                <td>「いま、整理する。」</td>
+                                <td>継続</td>
+                            </tr>
+                            <tr>
+                                <td>8-13秒</td>
+                                <td>パターン2（内容紹介）</td>
+                                <td>「4つの視点から」</td>
+                                <td>継続</td>
+                            </tr>
+                            <tr>
+                                <td>13-18秒</td>
+                                <td>パターン3（結果）</td>
+                                <td>「68%」</td>
+                                <td>上昇音</td>
+                            </tr>
+                            <tr>
+                                <td>18-25秒</td>
+                                <td>パターン4（特典）</td>
+                                <td>「診断完了後は...」</td>
+                                <td>継続</td>
+                            </tr>
+                            <tr>
+                                <td>25-30秒</td>
+                                <td>パターン5（CTA）</td>
+                                <td>「今すぐ試す」</td>
+                                <td>明るい音</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>BGM 推奨素材</h3>
+                <p>
+                    <strong>著作権フリー音源サイト：</strong>
+                </p>
+                <ul style="margin-left: 20px;">
+                    <li>YouTube Audio Library（無料）</li>
+                    <li>Pixabay Music（無料）</li>
+                    <li>Epidemic Sound（有料・高品質）</li>
+                </ul>
+                <p style="margin-top: 15px;">
+                    <strong>推奨ジャンル：</strong> 瞑想、シンプルピアノ、アンビエント
+                </p>
+            </div>
+        </div>
+
+        <!-- セクション 5: 収益化戦略 -->
+        <div class="section">
+            <h2>💰 収益化戦略</h2>
+
+            <div class="subsection">
+                <h3>Coconala でのサービス化</h3>
+                <div class="code-block">
+サービス内容：
+─────────────
+「いま、整理する。」診断 + 個別カウンセリング
+
+基本：診断ツール無料
+追加：個別相談（¥3,000-5,000）
+     カスタム整理プラン作成（¥5,000-10,000）
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>note 有料記事・サポート</h3>
+                <ul style="margin-left: 20px;">
+                    <li>「診断結果を深掘りする」 ¥500</li>
+                    <li>「わたしの整理ストーリー」 ¥1,000</li>
+                    <li>「エンディングノート完全版」 ¥980</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3>アフィリエイト</h3>
+                <p>
+                    <strong>もしもアフィリエイト：</strong> a_id=5460600<br>
+                    <strong>楽天ROOM：</strong> COCORYU<br>
+                    <strong>Gumroad：</strong> デジタル製品販売
+                </p>
+            </div>
+        </div>
+
+        <!-- セクション 6: 分析&改善 -->
+        <div class="section">
+            <h2>📊 分析&改善のポイント</h2>
+
+            <div class="subsection">
+                <h3>Google Analytics で追跡</h3>
+                <ol class="step-list">
+                    <li>
+                        <strong>診断ツール URL に GA タグを付加</strong><br>
+                        <code class="code-block">?utm_source=instagram&utm_medium=reels&utm_campaign=mao_diagnosis</code>
+                    </li>
+                    <li>
+                        <strong>追跡指標：</strong><br>
+                        • 訪問数<br>
+                        • 完了率<br>
+                        • LINE クリック率
+                    </li>
+                    <li>
+                        <strong>改善ポイント：</strong><br>
+                        • 離脱が多い質問の見直し<br>
+                        • モバイル体験の最適化<br>
+                        • 結果画面のコンバージョン率
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- セクション 7: トラブルシューティング -->
+        <div class="section">
+            <h2>🔧 トラブルシューティング</h2>
+
+            <div class="subsection">
+                <h3>よくある質問</h3>
+
+                <div style="margin-bottom: 20px;">
+                    <strong>Q: HTML ファイルが開かない</strong><br>
+                    A: ブラウザにドラッグ&ドロップ、または「ファイルを開く」から選択してください。
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <strong>Q: Instagram で診断ツールへのリンクを張りたい</strong><br>
+                    A: プロフィール欄に GitHub Pages URL を入れるか、Linktree などのランディングページサービスを使用してください。
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <strong>Q: 診断結果をカスタマイズしたい</strong><br>
+                    A: HTML ファイルの JavaScript 部分（resultMessages オブジェクト）を編集してください。
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <strong>Q: リンクスタイルを変更したい</strong><br>
+                    A: CSS セクション（--color-primary など）の変数値を変更してください。
+                </div>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <div class="footer">
+            <p>MAO 整理診断ツール - 完全実装パッケージ</p>
+            <p style="margin-bottom: 25px;">
+                このガイドに沿って進めれば、<br>
+                1日で全ての設定が完了します。
+            </p>
+            <p style="font-size: 12px; opacity: 0.7;">
+                ご不明な点がございましたら、<br>
+                LINE公式アカウント（lin.ee/SGVlcAV）までお気軽にお問い合わせください。
+            </p>
+        </div>
+    </div>
+</body>
+</html>

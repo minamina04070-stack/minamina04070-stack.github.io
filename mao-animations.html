@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAO診断 - アニメーション</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Yu Gothic Medium', 'Noto Sans JP', system-ui, sans-serif;
+            background: #FAFAF8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* === 共通スタイル === */
+        .animation-frame {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #3A3A38;
+            text-align: center;
+        }
+
+        /* === アニメーション 1: 診断ローディング === */
+        .animation-1 {
+            background: linear-gradient(135deg, #F5F3F0 0%, #FAFAF8 100%);
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #B8D4C8;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scaleY(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scaleY(1.2);
+                opacity: 1;
+            }
+        }
+
+        .loading-text {
+            font-size: 12px;
+            color: #8B9E96;
+            letter-spacing: 0.1em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* === アニメーション 2: スコア上昇 === */
+        .animation-2 {
+            background: linear-gradient(135deg, #B8D4C8 0%, #8B9E96 100%);
+            color: white;
+        }
+
+        .score-container {
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 72px;
+            font-weight: 300;
+            margin-bottom: 10px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-label {
+            font-size: 14px;
+            opacity: 0.9;
+            letter-spacing: 0.1em;
+        }
+
+        /* === アニメーション 3: 診断完了祝い === */
+        .animation-3 {
+            background: linear-gradient(135deg, #E8DCC8 0%, #F5F3F0 100%);
+        }
+
+        .celebration {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #B8D4C8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            animation: scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .checkmark::after {
+            content: "✓";
+            color: white;
+            font-size: 48px;
+            font-weight: 300;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .celebration-text {
+            font-size: 18px;
+            color: #3A3A38;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .confetti {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #B8D4C8;
+            animation: fall 2s linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* === アニメーション 4: プログレスバー === */
+        .animation-4 {
+            background: linear-gradient(135deg, #F5F3F0 0%, #FAFAF8 100%);
+            padding: 30px;
+        }
+
+        .progress-container {
+            width: 100%;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: #8B9E96;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 0.1em;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #F5F3F0;
+            border: 2px solid #8B9E96;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #8B9E96;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .step.active {
+            background: #B8D4C8;
+            border-color: #B8D4C8;
+            color: white;
+            transform: scale(1.2);
+        }
+
+        .step.completed {
+            background: #B8D4C8;
+            border-color: #B8D4C8;
+            color: white;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            width: 20px;
+            height: 2px;
+            background: #8B9E96;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step.completed::after {
+            background: #B8D4C8;
+        }
+
+        .progress-bar-bottom {
+            height: 3px;
+            background: #F5F3F0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #B8D4C8;
+            border-radius: 2px;
+            animation: fillProgress 4s ease-in-out forwards;
+        }
+
+        @keyframes fillProgress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .progress-text {
+            font-size: 11px;
+            color: #3A3A38;
+            text-align: center;
+        }
+
+        /* === アニメーション 5: 心の波紋 === */
+        .animation-5 {
+            background: linear-gradient(135deg, #FAFAF8 0%, #F5F3F0 100%);
+        }
+
+        .heart-center {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+
+        .heart {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .ripple {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #B8D4C8;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: rippleWave 2s infinite;
+        }
+
+        .ripple:nth-child(2) {
+            animation-delay: 0.6s;
+        }
+
+        .ripple:nth-child(3) {
+            animation-delay: 1.2s;
+        }
+
+        @keyframes rippleWave {
+            0% {
+                width: 40px;
+                height: 40px;
+                opacity: 1;
+            }
+            100% {
+                width: 120px;
+                height: 120px;
+                opacity: 0;
+            }
+        }
+
+        .ripple-text {
+            font-size: 14px;
+            color: #8B9E96;
+            text-align: center;
+        }
+
+        /* === アニメーション 6: データ集計 === */
+        .animation-6 {
+            background: linear-gradient(135deg, #E8DCC8 0%, #FAFAF8 100%);
+        }
+
+        .data-items {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .data-item {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .data-bar {
+            height: 4px;
+            background: #F5F3F0;
+            border-radius: 2px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .data-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #B8D4C8 0%, #8B9E96 100%);
+            border-radius: 2px;
+            animation: fillBar 1.5s ease-out forwards;
+        }
+
+        .data-item:nth-child(1) .data-fill {
+            animation-delay: 0s;
+            width: 85%;
+        }
+
+        .data-item:nth-child(2) .data-fill {
+            animation-delay: 0.3s;
+            width: 62%;
+        }
+
+        .data-item:nth-child(3) .data-fill {
+            animation-delay: 0.6s;
+            width: 78%;
+        }
+
+        @keyframes fillBar {
+            0% {
+                width: 0%;
+            }
+        }
+
+        .data-label {
+            font-size: 11px;
+            color: #8B9E96;
+            letter-spacing: 0.1em;
+        }
+
+        /* === 説明 === */
+        .description {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            font-size: 11px;
+            color: #8B9E96;
+            text-align: center;
+            background: rgba(255,255,255,0.7);
+            padding: 8px;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        /* === レスポンシブ === */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- アニメーション 1: 診断ローディング -->
+        <div class="animation-frame animation-1">
+            <div class="title">診断を進行中...</div>
+            <div class="loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="loading-text">お待ちください</div>
+            <div class="description">ローディング</div>
+        </div>
+
+        <!-- アニメーション 2: スコア上昇 -->
+        <div class="animation-frame animation-2">
+            <div class="title">スコア表示</div>
+            <div class="score-container">
+                <div class="score-number" id="scoreCount">0%</div>
+                <div class="score-label">整理スコア</div>
+            </div>
+            <div class="description">カウントアップ</div>
+        </div>
+
+        <!-- アニメーション 3: 診断完了祝い -->
+        <div class="animation-frame animation-3">
+            <div class="title">診断完了</div>
+            <div class="celebration">
+                <div class="checkmark"></div>
+                <div class="celebration-text">完了しました</div>
+                <svg class="confetti" width="300" height="300"></svg>
+            </div>
+            <div class="description">祝いアニメーション</div>
+        </div>
+
+        <!-- アニメーション 4: プログレスバー -->
+        <div class="animation-frame animation-4">
+            <div class="title">プログレス</div>
+            <div class="progress-container">
+                <div class="progress-label">診断の進み具合</div>
+                <div class="progress-bar-bottom">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="step completed">1</div>
+                    <div class="step completed">2</div>
+                    <div class="step completed">3</div>
+                    <div class="step completed">4</div>
+                </div>
+                <div class="progress-text">4/4 完了</div>
+            </div>
+            <div class="description">ステップ表示</div>
+        </div>
+
+        <!-- アニメーション 5: 心の波紋 -->
+        <div class="animation-frame animation-5">
+            <div class="title">心と向き合う</div>
+            <div class="heart-center">
+                <div class="heart">💝</div>
+                <div class="ripple"></div>
+                <div class="ripple"></div>
+                <div class="ripple"></div>
+            </div>
+            <div class="ripple-text">瞑想的な瞬間</div>
+            <div class="description">波紋アニメーション</div>
+        </div>
+
+        <!-- アニメーション 6: データ集計 -->
+        <div class="animation-frame animation-6">
+            <div class="title">結果集計</div>
+            <div class="data-items">
+                <div class="data-item">
+                    <div class="data-label">物との関係</div>
+                    <div class="data-bar">
+                        <div class="data-fill"></div>
+                    </div>
+                </div>
+                <div class="data-item">
+                    <div class="data-label">資産と向き合う</div>
+                    <div class="data-bar">
+                        <div class="data-fill"></div>
+                    </div>
+                </div>
+                <div class="data-item">
+                    <div class="data-label">心の整理</div>
+                    <div class="data-bar">
+                        <div class="data-fill"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="description">データ集計</div>
+        </div>
+    </div>
+
+    <script>
+        // スコアアニメーション
+        function animateScore() {
+            const scoreElement = document.getElementById('scoreCount');
+            let current = 0;
+            const target = 68;
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            
+            const interval = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(interval);
+                    // アニメーション終了後、リセット
+                    setTimeout(animateScore, 2000);
+                }
+                scoreElement.textContent = Math.floor(current) + '%';
+            }, 16);
+        }
+
+        // 祝いアニメーション用のコンフェッティ生成
+        function generateConfetti() {
+            const svg = document.querySelector('.confetti');
+            const confettiPieces = [];
+            
+            // 既存のコンフェッティをクリア
+            svg.innerHTML = '';
+            
+            for (let i = 0; i < 30; i++) {
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                const x = Math.random() * 300;
+                const delay = Math.random() * 0.5;
+                const duration = 2 + Math.random() * 1;
+                
+                rect.setAttribute('x', x);
+                rect.setAttribute('y', '0');
+                rect.setAttribute('width', '8');
+                rect.setAttribute('height', '8');
+                rect.setAttribute('fill', Math.random() > 0.5 ? '#B8D4C8' : '#8B9E96');
+                rect.style.animation = `fall ${duration}s linear ${delay}s forwards`;
+                
+                svg.appendChild(rect);
+            }
+            
+            // 2秒後に再度実行
+            setTimeout(generateConfetti, 3000);
+        }
+
+        // 初期化
+        window.addEventListener('load', () => {
+            animateScore();
+            generateConfetti();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ライフステージ診断 | MAO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Maru Gothic ProN', 'Maru Gothic', sans-serif;
+            background: linear-gradient(135deg, #f5f1e8 0%, #ede6d3 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: 20px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #8b6f47;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .input-section h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 12px;
+            border: 2px solid #e0d5c7;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            font-family: 'Hiragino Maru Gothic ProN', sans-serif;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #d4a574;
+            background: #fffbf5;
+        }
+
+        .input-label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+            min-width: 40px;
+            justify-content: center;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Hiragino Maru Gothic ProN', sans-serif;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4a574 0%, #c9975f 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #f5f1e8;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #ede6d3;
+        }
+
+        .result-section {
+            display: none;
+        }
+
+        .result-section.active {
+            display: block;
+        }
+
+        .age-info {
+            background: #fffbf5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-left: 4px solid #d4a574;
+        }
+
+        .age-info p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .age-info .highlight {
+            font-size: 24px;
+            color: #8b6f47;
+            font-weight: bold;
+        }
+
+        .stage-title {
+            font-size: 28px;
+            color: #d4a574;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .stage-emoji {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .stage-description {
+            background: linear-gradient(135deg, #fffbf5 0%, #f5f1e8 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: #555;
+            font-size: 15px;
+            border-left: 4px solid #d4a574;
+        }
+
+        .stage-content {
+            margin-bottom: 20px;
+        }
+
+        .stage-content h3 {
+            font-size: 16px;
+            color: #8b6f47;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stage-content p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        .message-box {
+            background: white;
+            border: 2px solid #e0d5c7;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .message-box .mao-message {
+            font-size: 16px;
+            color: #8b6f47;
+            line-height: 1.9;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .message-box .mao-signature {
+            font-size: 14px;
+            color: #d4a574;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .stage-flow {
+            background: #fffbf5;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .flow-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .flow-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .flow-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            width: 30px;
+            text-align: center;
+        }
+
+        .flow-content {
+            flex: 1;
+        }
+
+        .flow-label {
+            font-size: 13px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .flow-text {
+            font-size: 15px;
+            color: #555;
+            margin-top: 3px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #d4a574 0%, #c9975f 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cta-section h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .cta-section p {
+            font-size: 14px;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #d4a574;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-left: 4px solid #c62828;
+        }
+
+        .tarot-cards {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tarot-card {
+            width: 70px;
+            height: 100px;
+            background: linear-gradient(135deg, #8b6f47 0%, #6b5338 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            color: #999;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .input-group {
+                flex-direction: column;
+            }
+
+            input[type="number"] {
+                width: 100%;
+            }
+
+            .stage-title {
+                font-size: 24px;
+            }
+
+            .stage-emoji {
+                font-size: 40px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">ライフステージ診断</div>
+            <div class="subtitle">今のあなたの人生段階を見つける</div>
+        </header>
+
+        <div class="card input-section" id="inputSection">
+            <h2>あなたの生年月日を入力してください</h2>
+            <div class="input-group">
+                <input type="number" id="year" placeholder="1969" min="1900" max="2025">
+                <span class="input-label">年</span>
+                <input type="number" id="month" placeholder="04" min="1" max="12">
+                <span class="input-label">月</span>
+                <input type="number" id="day" placeholder="07" min="1" max="31">
+                <span class="input-label">日</span>
+            </div>
+            <div class="button-group">
+                <button class="btn-primary" onclick="diagnose()">診断する</button>
+                <button class="btn-secondary" onclick="clearInput()">リセット</button>
+            </div>
+            <div id="errorMessage"></div>
+        </div>
+
+        <div class="card result-section" id="resultSection">
+            <button class="btn-secondary" onclick="backToInput()" style="width: 100%; margin-bottom: 20px;">← 戻る</button>
+            
+            <div class="age-info">
+                <p>あなたの年齢</p>
+                <div class="highlight" id="ageDisplay">0歳</div>
+                <p id="birthDisplay">生年月日</p>
+            </div>
+
+            <div class="stage-emoji" id="stageEmoji">🌱</div>
+            <div class="stage-title" id="stageTitle">種まきの時</div>
+
+            <div class="stage-description" id="stageDescription">
+                人生の最初の段階です。
+            </div>
+
+            <div class="message-box">
+                <div class="mao-message" id="maoMessage">
+                    今この瞬間を<br>
+                    大切に生きること<br>
+                    それがすべて
+                </div>
+                <div class="mao-signature">南無マオ</div>
+            </div>
+
+            <div class="stage-flow">
+                <h3 style="margin-bottom: 15px; color: #8b6f47;">今のあなたのステージ</h3>
+                <div class="flow-item">
+                    <div class="flow-icon">←</div>
+                    <div class="flow-content">
+                        <div class="flow-label">過去</div>
+                        <div class="flow-text" id="pastStage">準備の時</div>
+                    </div>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-icon">◆</div>
+                    <div class="flow-content">
+                        <div class="flow-label">現在</div>
+                        <div class="flow-text" id="currentStage">種まきの時</div>
+                    </div>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-icon">→</div>
+                    <div class="flow-content">
+                        <div class="flow-label">未来</div>
+                        <div class="flow-text" id="futureStage">成長の時</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stage-content">
+                <h3>このステージのテーマ</h3>
+                <p id="themeContent">テーマの説明</p>
+            </div>
+
+            <div class="stage-content">
+                <h3>今、大切にすること</h3>
+                <p id="adviceContent">アドバイスの内容</p>
+            </div>
+
+            <div class="cta-section">
+                <h3>さらに詳しく知りたい方へ</h3>
+                <p>九星気学や四柱推命をベースにした、あなた専用のガイダンスをお受けいただけます。</p>
+                <a href="https://lin.ee/SGVlcAV" target="_blank" class="cta-button">LINE で相談する</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 一般社団法人MAO | 今活とこころの整理</p>
+    </div>
+
+    <script>
+        const stagesData = {
+            0: {
+                name: "種まきの時",
+                emoji: "🌱",
+                ageRange: "0～18歳",
+                description: "人生の最初の段階。あらゆることが新しく、可能性に満ちた時期です。好奇心のままに、様々な経験を積み重ねることが大切。",
+                theme: "可能性を探る、基礎を作る",
+                advice: "興味のままに学び、遊び、体験すること。失敗を恐れず、自分らしさを探る時間を大切にしてください。",
+                message: "あなたの内に秘めた\n無限の可能性を\n信じてください",
+                past: "準備の時",
+                current: "種まきの時",
+                future: "成長の時"
+            },
+            1: {
+                name: "成長の時",
+                emoji: "🌿",
+                ageRange: "19～35歳",
+                description: "種が芽を出し、枝を広げていく段階。自分の進む道を探り、スキルを磨き、人間関係を広げる時期です。挑戦と学びが続きます。",
+                theme: "自分を知る、力を養う",
+                advice: "新しいチャレンジを恐れず、失敗から学ぶことを大切に。自分の軸足を作る時期です。人との繋がりも大切に。",
+                message: "今は苦しくても\n一歩一歩が\nあなたを形作る",
+                past: "種まきの時",
+                current: "成長の時",
+                future: "花開く時"
+            },
+            2: {
+                name: "花開く時",
+                emoji: "🌸",
+                ageRange: "36～52歳",
+                description: "これまでの努力が花開き、人生が最も輝く段階。社会での役割が明確になり、経験と知恵が結実します。影響力を持つ時期。",
+                theme: "実を結ぶ、人に与える",
+                advice: "これまで学んだことを人に還す時期です。後進を育成し、社会に貢献する喜びを感じてください。今が最も輝く時です。",
+                message: "あなたの歩んだ道が\n誰かの光になる\nそんな時期です",
+                past: "成長の時",
+                current: "花開く時",
+                future: "実を結ぶ時"
+            },
+            3: {
+                name: "実を結ぶ時",
+                emoji: "🍎",
+                ageRange: "53～69歳",
+                description: "人生の実りを味わう時期。これまでの経験から深い知恵が生まれ、人生を統合する段階です。精神的な充実感が訪れます。",
+                theme: "統合する、導く",
+                advice: "人生経験を整理し、次世代へ伝えることを考える時期です。焦らず、自分のペースで人生を味わってください。",
+                message: "長い人生の中で\n見えてきたものを\n大切にしてください",
+                past: "花開く時",
+                current: "実を結ぶ時",
+                future: "種へ還る時"
+            },
+            4: {
+                name: "種へ還る時",
+                emoji: "🌾",
+                ageRange: "70歳以上",
+                description: "人生を総括し、次世代へ遺すものを考える段階。物質的なものから精神的なものへ、心の整理と次への準備の時期です。",
+                theme: "遺す、許す、手放す",
+                advice: "これまでの人生を受け入れ、今この瞬間の喜びを感じてください。次世代への想いを形にすることも大切です。",
+                message: "あなたの人生は\n次の世代へ\n確実に繋がっている",
+                past: "実を結ぶ時",
+                current: "種へ還る時",
+                future: "新しい輪へ"
+            }
+        };
+
+        function calculateAge(year, month, day) {
+            const today = new Date();
+            let age = today.getFullYear() - year;
+            
+            if (today.getMonth() + 1 < month || 
+                (today.getMonth() + 1 === month && today.getDate() < day)) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        function getStageIndex(age) {
+            if (age < 19) return 0;
+            if (age < 36) return 1;
+            if (age < 53) return 2;
+            if (age < 70) return 3;
+            return 4;
+        }
+
+        function diagnose() {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = '';
+
+            const year = parseInt(document.getElementById('year').value);
+            const month = parseInt(document.getElementById('month').value);
+            const day = parseInt(document.getElementById('day').value);
+
+            // バリデーション
+            if (!year || !month || !day) {
+                errorDiv.innerHTML = '<div class="error">生年月日をすべて入力してください</div>';
+                return;
+            }
+
+            if (year < 1900 || year > new Date().getFullYear()) {
+                errorDiv.innerHTML = '<div class="error">有効な年号を入力してください</div>';
+                return;
+            }
+
+            if (month < 1 || month > 12) {
+                errorDiv.innerHTML = '<div class="error">月は1～12を入力してください</div>';
+                return;
+            }
+
+            if (day < 1 || day > 31) {
+                errorDiv.innerHTML = '<div class="error">日は1～31を入力してください</div>';
+                return;
+            }
+
+            const age = calculateAge(year, month, day);
+
+            if (age < 0) {
+                errorDiv.innerHTML = '<div class="error">生年月日が未来です</div>';
+                return;
+            }
+
+            const stageIndex = getStageIndex(age);
+            const stage = stagesData[stageIndex];
+            const allStages = Object.values(stagesData);
+
+            // 表示
+            document.getElementById('ageDisplay').textContent = age + '歳';
+            document.getElementById('birthDisplay').textContent = 
+                `${year}年${String(month).padStart(2, '0')}月${String(day).padStart(2, '0')}日生まれ`;
+            
+            document.getElementById('stageEmoji').textContent = stage.emoji;
+            document.getElementById('stageTitle').textContent = stage.name;
+            document.getElementById('stageDescription').textContent = stage.description;
+            document.getElementById('maoMessage').innerHTML = stage.message.split('\n').join('<br>');
+            document.getElementById('themeContent').textContent = stage.theme;
+            document.getElementById('adviceContent').textContent = stage.advice;
+
+            document.getElementById('pastStage').textContent = stage.past;
+            document.getElementById('currentStage').textContent = stage.current;
+            document.getElementById('futureStage').textContent = stage.future;
+
+            document.getElementById('inputSection').classList.remove('active');
+            document.getElementById('resultSection').classList.add('active');
+        }
+
+        function clearInput() {
+            document.getElementById('year').value = '';
+            document.getElementById('month').value = '';
+            document.getElementById('day').value = '';
+            document.getElementById('errorMessage').innerHTML = '';
+        }
+
+        function backToInput() {
+            document.getElementById('inputSection').classList.add('active');
+            document.getElementById('resultSection').classList.remove('active');
+        }
+
+        // Enterキーで診断
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('inputSection').classList.contains('active')) {
+                diagnose();
+            }
+        });
+    </script>
+</body>
+</html>

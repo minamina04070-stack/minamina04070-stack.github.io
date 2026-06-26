@@ -1,0 +1,186 @@
+==========================================
+ライフステージ診断ツール
+GitHub Pages デプロイ手順書
+==========================================
+
+## 📁 ファイル構成
+
+以下の2つのファイルを使用します：
+
+1. lifestage-diagnosis.html 
+   → ツール本体（そのままWebで動く HTML ファイル）
+
+2. lifestage-marketing-copy.txt
+   → マーケティングコピー 20本 + 活用案
+
+
+---
+
+## 🚀 デプロイ手順
+
+### STEP 1：ローカルリポジトリを準備
+
+```bash
+# 1. ローカルで GitHub リポジトリをクローン
+git clone https://github.com/minamina04070-stack/minamina04070-stack.github.io.git
+cd minamina04070-stack.github.io
+
+# 2. 新しいフォルダを作成（ツール用）
+mkdir lifestage-diagnosis
+cd lifestage-diagnosis
+```
+
+### STEP 2：ツールファイルをコピー
+
+```
+lifestage-diagnosis.html 
+→ lifestage-diagnosis/ フォルダ内に「index.html」として保存
+
+※ ファイル名を「index.html」に変更するのが重要です
+  （これにより https://minamina04070-stack.github.io/lifestage-diagnosis/ でアクセス可能に）
+```
+
+### STEP 3：Git で push
+
+```bash
+# リポジトリのルートディレクトリに戻る
+cd ..
+
+# ファイルをステージング
+git add lifestage-diagnosis/
+
+# コミット
+git commit -m "feat: add lifestage diagnosis tool (ライフステージ診断ツール追加)"
+
+# プッシュ
+git push origin main
+```
+
+### STEP 4：確認
+
+5～10分待つと、以下の URL でアクセス可能になります：
+
+```
+https://minamina04070-stack.github.io/lifestage-diagnosis/
+```
+
+---
+
+## 📋 ディレクトリ構造（参考）
+
+```
+minamina04070-stack.github.io/
+├── index.html （メインページ）
+├── 九星気学/ （既存）
+│   └── index.html
+├── 海とくじら占い/ （既存）
+│   └── index.html
+└── lifestage-diagnosis/ （新規）
+    └── index.html  ← lifestage-diagnosis.html をここに置く
+```
+
+---
+
+## 🎨 カスタマイズポイント
+
+### LINE Official Account リンク
+以下の部分を自分のリンクに変更可能です：
+
+```html
+<a href="https://lin.ee/SGVlcAV" target="_blank" class="cta-button">LINE で相談する</a>
+```
+
+↓
+
+```html
+<a href="あなたのLINE公式URLを入力" target="_blank" class="cta-button">LINE で相談する</a>
+```
+
+### カラースキーム変更
+CSS の色コードを変更すれば、全体の雰囲気を変更できます：
+
+```css
+/* メインカラー */
+#d4a574  → 別の色コードに変更
+
+/* サブカラー */
+#8b6f47  → 別の色コードに変更
+```
+
+---
+
+## 🔍 テスト方法（デプロイ前に確認）
+
+### ローカルで確認したい場合：
+
+1. `lifestage-diagnosis.html` をブラウザにドラッグ＆ドロップ
+2. または、ブラウザで右クリック → 「開く」
+
+動作確認：
+- 生年月日を入力 → 診断ボタンを押す
+- 5つのステージ（種まき～種へ還る時）が正しく表示されるか
+- LINE誘導ボタンがクリック可能か
+
+---
+
+## 📢 マーケティングコピー活用案
+
+### すぐに使える3つの組み合わせ
+
+**① Threads 投稿（メイン）**
+```
+コピー1番 ＋ コピー7番 ＋ コピー19番
+を短行・詩的に組み合わせて投稿
+```
+
+**② LINE 誘導文**
+```
+コピー17番をテキストに
+「いますぐ診断する」ボタンを link.lin.ee のショートカットで
+```
+
+**③ Instagram ストーリーズ**
+```
+「あなたの人生は、こんなに美しい色をしていた。
+その色を知るのが、ライフステージ診断です。」
+（コピー8番）
++ スワイプアップ or プロフィール誘導
+```
+
+詳細は `lifestage-marketing-copy.txt` を参照。
+
+---
+
+## ✅ チェックリスト
+
+□ lifestage-diagnosis/ フォルダを作成
+□ lifestage-diagnosis.html を index.html にリネームして配置
+□ git add / commit / push を実行
+□ 5～10分後、指定 URL でアクセス可能か確認
+□ LINE リンクが自分の公式アカウント URL か確認
+□ Threads / Instagram で告知投稿を準備
+
+---
+
+## 🆘 トラブルシューティング
+
+**Q: 404エラーが出る**
+→ ファイル名が「index.html」になっているか確認
+→ フォルダ構造が正しいか確認（lifestage-diagnosis/index.html）
+
+**Q: ページは表示されるが、動作しない**
+→ ブラウザの開発者ツール（F12） → コンソール をチェック
+→ エラーメッセージがあれば確認
+
+**Q: LINE リンクをクリックしても開かない**
+→ href の URL を確認
+→ https://lin.ee/... の形式が正しいか確認
+
+---
+
+## 📞 サポート
+
+不明な点は、いつでもお声がけください！
+
+ツール本体の微調整、色合い変更、ロジック修正なども対応可能です。
+

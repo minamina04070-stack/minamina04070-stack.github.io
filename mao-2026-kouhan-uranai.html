@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026年後半 運勢と恋愛 ―Maoふう占―</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F7F2E9;
+    --ink:#33302A;
+    --dusk:#6C8494;
+    --forest:#4A5D4E;
+    --terracotta:#C17F59;
+    --gold:#B89454;
+    --line:#DCD3C2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at top left, rgba(108,132,148,0.08), transparent 55%),
+      radial-gradient(ellipse at bottom right, rgba(193,127,89,0.07), transparent 55%),
+      var(--cream);
+    color:var(--ink);
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    min-height:100vh;
+    padding:48px 20px 80px;
+  }
+  .wrap{max-width:640px; margin:0 auto;}
+
+  header{text-align:center; margin-bottom:44px;}
+  .eyebrow{
+    font-size:12px; letter-spacing:0.32em; color:var(--dusk);
+    font-weight:400; margin-bottom:14px; text-transform:uppercase;
+  }
+  h1{
+    font-family:'Shippori Mincho', serif;
+    font-weight:600;
+    font-size:clamp(26px, 6vw, 34px);
+    line-height:1.5;
+    margin:0 0 12px;
+    letter-spacing:0.04em;
+  }
+  h1 span{color:var(--terracotta);}
+  .lede{
+    font-size:13.5px; color:#6b6558; line-height:2; max-width:420px; margin:0 auto;
+  }
+
+  /* Input card */
+  .card{
+    background:#FFFDF8;
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:36px 30px;
+    box-shadow:0 1px 0 rgba(0,0,0,0.02);
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, var(--dusk), var(--gold) 50%, var(--terracotta));
+    opacity:0.55;
+  }
+  label{
+    display:block; font-size:12.5px; color:var(--forest); letter-spacing:0.08em;
+    margin-bottom:10px; font-weight:500;
+  }
+  input[type="date"]{
+    width:100%;
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    font-size:16px;
+    padding:13px 14px;
+    border:1px solid var(--line);
+    border-radius:1px;
+    background:#fff;
+    color:var(--ink);
+    outline:none;
+  }
+  input[type="date"]:focus{border-color:var(--dusk);}
+  .hint{font-size:11.5px; color:#a49c8a; margin-top:8px; letter-spacing:0.02em;}
+
+  button{
+    margin-top:26px;
+    width:100%;
+    padding:15px;
+    background:var(--forest);
+    color:#F7F2E9;
+    border:none;
+    font-family:'Shippori Mincho', serif;
+    font-size:15.5px;
+    letter-spacing:0.2em;
+    cursor:pointer;
+    transition:background .3s ease, transform .2s ease;
+  }
+  button:hover{background:#3c4c3f;}
+  button:active{transform:scale(0.995);}
+
+  /* Result */
+  #result{
+    margin-top:8px;
+    display:none;
+  }
+  .star-badge{
+    text-align:center;
+    margin:44px 0 6px;
+  }
+  .star-num{
+    font-family:'Shippori Mincho', serif;
+    font-size:12px;
+    letter-spacing:0.3em;
+    color:var(--gold);
+    margin-bottom:8px;
+  }
+  .star-name{
+    font-family:'Shippori Mincho', serif;
+    font-weight:700;
+    font-size:clamp(24px,6vw,30px);
+    color:var(--ink);
+    letter-spacing:0.06em;
+  }
+  .divider{
+    width:36px; height:1px; background:var(--line); margin:22px auto;
+  }
+
+  .section-label{
+    text-align:center;
+    font-family:'Shippori Mincho', serif;
+    font-size:13px;
+    letter-spacing:0.28em;
+    color:var(--dusk);
+    margin:38px 0 22px;
+  }
+  .section-label.love{color:var(--terracotta);}
+
+  .poem{
+    text-align:center;
+    font-family:'Shippori Mincho', serif;
+    font-size:16.5px;
+    line-height:2.3;
+    color:var(--ink);
+    letter-spacing:0.03em;
+  }
+  .poem p{
+    margin:0 0 6px;
+    opacity:0;
+    transform:translateY(6px);
+    animation:riseIn 0.9s ease forwards;
+  }
+  @keyframes riseIn{
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .signature{
+    text-align:center;
+    margin-top:46px;
+    font-family:'Shippori Mincho', serif;
+    font-size:15px;
+    letter-spacing:0.5em;
+    color:var(--gold);
+    opacity:0;
+    animation:riseIn 1s ease forwards;
+  }
+
+  .footnote{
+    text-align:center;
+    font-size:11px;
+    color:#b3ab99;
+    margin-top:36px;
+    line-height:1.9;
+    letter-spacing:0.02em;
+  }
+
+  .retry{
+    text-align:center; margin-top:28px;
+  }
+  .retry a{
+    font-size:12px; color:var(--dusk); text-decoration:none;
+    border-bottom:1px solid var(--dusk); padding-bottom:2px; cursor:pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .poem p, .signature{ animation:none !important; opacity:1 !important; transform:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">MAO 今活 ｜ うらない</div>
+    <h1>2026年後半の<br><span>運勢</span>と<span>恋愛</span></h1>
+    <p class="lede">生まれた日から、あなたの本命星を導き<br>この先半年の風向きを、詩のようにお伝えします。</p>
+  </header>
+
+  <div class="card" id="inputCard">
+    <label for="birthdate">生年月日</label>
+    <input type="date" id="birthdate" min="1920-01-01" max="2026-07-01">
+    <div class="hint">満年齢ではなく、生まれた年月日そのものをどうぞ。</div>
+    <button id="diagBtn">診断する</button>
+  </div>
+
+  <div id="result"></div>
+
+  <p class="footnote">この診断は、九星気学の考え方をもとにした<br>Maoふうのやさしい指針です。占いの結果に縛られず<br>今日という日を、あなたらしく歩んでください。</p>
+
+</div>
+
+<script>
+const STAR_NAMES = {
+  1:"一白水星", 2:"二黒土星", 3:"三碧木星", 4:"四緑木星", 5:"五黄土星",
+  6:"六白金星", 7:"七赤金星", 8:"八白土星", 9:"九紫火星"
+};
+
+const READINGS = {
+  1: {
+    fortune: ["静かな水は、深いところで動いている", "2026年の後半、あなたは", "内側を整える季節に入る", "焦らず、澄むまで待つこと", "その澄んだ水が、秋には道をひらく"],
+    love: ["雨があがった空のような出会い", "劇的でなくていい", "そっと隣にいてくれる人を", "見逃さないで", "静けさの中にこそ、縁がある"]
+  },
+  2: {
+    fortune: ["土は、誰かを育てながら自らも育つ", "この半年、支える立場にいるあなたに", "静かな実りが返ってくる", "見返りを数えず、手を動かし続けて", "冬には、その土から芽が出る"],
+    love: ["恋は、育てるものだと知っている人", "急がず、水をやるように接して", "相手のペースを信じることが", "何よりの愛情になる季節"]
+  },
+  3: {
+    fortune: ["雷は、あなたの声を後押しする", "2026年後半、言いたかったことを", "言葉にする勇気が実を結ぶ", "沈黙より、一歩の発信を", "秋の風が、新しい扉を開ける"],
+    love: ["稲妻のように、ふいに訪れる出会い", "ためらわず、まず声をかけてみて", "動いた分だけ、縁は近づく", "受け身では、風は吹かない"]
+  },
+  4: {
+    fortune: ["風は、遠くから縁を運んでくる", "2026年後半、あなたのもとに", "思いがけない繋がりが訪れる", "軽やかに動くほど、風は味方する", "秋には、遠方からの知らせも"],
+    love: ["自然体でいる時ほど、人が近づく", "取り繕わず、風に吹かれるままに", "無理に追いかけない恋が", "気づけば一番深く実っている"]
+  },
+  5: {
+    fortune: ["中心にいる星は、揺れながら整う", "この半年は、手放しの季節", "古いものを終えて、初めて", "新しいものが入る余地ができる", "冬の入り口で、生まれ変わる"],
+    love: ["終わらせることを恐れないで", "過去の形に執着しないほど", "新しい愛が入りやすくなる", "手放した先に、本当の相手がいる"]
+  },
+  6: {
+    fortune: ["天は、誠実な人に采配を渡す", "2026年後半、積み上げてきた信頼が", "静かに評価される時期", "驕らず、丁寧にあり続けること", "秋、思わぬところから声がかかる"],
+    love: ["飾らない誠実さが、一番の魅力", "駆け引きより、まっすぐな姿勢を", "信頼を積む相手との縁が", "この半年でゆっくり形になる"]
+  },
+  7: {
+    fortune: ["湖は、笑い声とともに満ちていく", "この半年、人との会話の中に", "運気を高める鍵がある", "軽い言葉を、大切に交わして", "秋には、その縁が実利にもつながる"],
+    love: ["言葉を交わす喜びから始まる恋", "難しく考えず、まず笑い合うこと", "楽しい会話ができる相手こそ", "長く続く縁の予感がある"]
+  },
+  8: {
+    fortune: ["山は、積み重ねた分だけ高くなる", "2026年後半は、地道な努力が", "静かに山となっていく時期", "急がず、一段ずつ登ること", "冬の頂で、景色が変わって見える"],
+    love: ["ゆっくり時間をかけて信頼を積む", "すぐに答えを求めない相手ほど", "この季節はふさわしい", "焦りは、山を崩すこともある"]
+  },
+  9: {
+    fortune: ["火は、あなたに光をあてる星", "2026年後半、これまでの努力が", "人の目に触れる季節がくる", "直感を信じて、前に出て", "秋、名前を知られる出来事が起きる"],
+    love: ["情熱と直感が導く恋の季節", "一目で「この人だ」と感じたら", "その直感を、大切にして", "燃えるような出会いに開かれている"]
+  }
+};
+
+function digitSum(n){
+  let s = n.toString().split('').reduce((a,b)=>a+parseInt(b,10),0);
+  while(s > 9){ s = s.toString().split('').reduce((a,b)=>a+parseInt(b,10),0); }
+  return s;
+}
+
+function calcKyuusei(year, month, day){
+  let y = year;
+  if(month < 2 || (month === 2 && day < 4)){ y -= 1; } // 立春調整（簡易）
+  const s = digitSum(y);
+  let star = (y < 2000) ? (11 - s) : (10 - s);
+  if(star > 9) star -= 9;
+  if(star < 1) star += 9;
+  return star;
+}
+
+function renderPoem(lines){
+  return lines.map((line, i) =>
+    `<p style="animation-delay:${0.15 + i*0.28}s">${line}</p>`
+  ).join('');
+}
+
+document.getElementById('diagBtn').addEventListener('click', () => {
+  const val = document.getElementById('birthdate').value;
+  if(!val){
+    alert('生年月日を選んでください');
+    return;
+  }
+  const [year, month, day] = val.split('-').map(Number);
+  const star = calcKyuusei(year, month, day);
+  const name = STAR_NAMES[star];
+  const reading = READINGS[star];
+
+  const resultEl = document.getElementById('result');
+  resultEl.innerHTML = `
+    <div class="star-badge">
+      <div class="star-num">本命星 ・ ${star}</div>
+      <div class="star-name">${name}</div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="section-label">2026年後半の運勢</div>
+    <div class="poem">${renderPoem(reading.fortune)}</div>
+
+    <div class="section-label love">2026年後半の恋愛</div>
+    <div class="poem">${renderPoem(reading.love)}</div>
+
+    <div class="signature" style="animation-delay:${0.15 + (reading.fortune.length + reading.love.length)*0.28 + 0.3}s">南無マオ</div>
+
+    <div class="retry"><a id="retryLink">もう一度、診断する</a></div>
+  `;
+  resultEl.style.display = 'block';
+  document.getElementById('inputCard').style.display = 'none';
+  resultEl.scrollIntoView({behavior:'smooth', block:'start'});
+
+  document.getElementById('retryLink').addEventListener('click', () => {
+    resultEl.style.display = 'none';
+    document.getElementById('inputCard').style.display = 'block';
+    document.getElementById('inputCard').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+</script>
+</body>
+</html>

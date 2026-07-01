@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>働き方診断 | 九星が教える、あなたらしい働き方</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night: #1b2438;
+    --night-deep: #131a2b;
+    --gold: #e8b95e;
+    --gold-soft: #f0d193;
+    --rose: #d98e8e;
+    --sage: #93ab93;
+    --mist: #cfd6e4;
+    --paper: #f6f2e8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    background: var(--night);
+    color: var(--paper);
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  body{
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 70% 15%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1.5px 1.5px at 85% 60%, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,.3), transparent),
+      radial-gradient(1px 1px at 10% 65%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1.5px 1.5px at 55% 45%, rgba(255,255,255,.3), transparent),
+      radial-gradient(1px 1px at 92% 85%, rgba(255,255,255,.4), transparent),
+      linear-gradient(180deg, var(--night) 0%, var(--night-deep) 100%);
+    background-attachment: fixed;
+  }
+  .wrap{
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  header{
+    text-align:center;
+    margin-bottom: 40px;
+  }
+  .eyebrow{
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    color: var(--gold-soft);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  h1{
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.5;
+    color: var(--paper);
+    letter-spacing: 0.02em;
+  }
+  h1 span{
+    color: var(--gold);
+  }
+  .sub{
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.9;
+  }
+
+  /* form */
+  .card{
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(232,185,94,0.25);
+    border-radius: 18px;
+    padding: 32px 28px;
+    backdrop-filter: blur(6px);
+  }
+  .field-row{
+    display:flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  label.small{
+    display:block;
+    font-size: 12px;
+    color: var(--gold-soft);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  select, input[type=number]{
+    width:100%;
+    background: rgba(19,26,43,0.7);
+    border: 1px solid rgba(232,185,94,0.35);
+    color: var(--paper);
+    padding: 12px 10px;
+    border-radius: 10px;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 15px;
+    appearance:none;
+    text-align:center;
+  }
+  select:focus, input:focus{
+    outline: 2px solid var(--gold);
+    outline-offset: 1px;
+  }
+  .unit{
+    font-size:12px;
+    color:var(--mist);
+    display:block;
+    text-align:center;
+    margin-top:4px;
+  }
+  button.diagnose{
+    width:100%;
+    margin-top: 26px;
+    background: linear-gradient(180deg, var(--gold-soft), var(--gold));
+    color: var(--night-deep);
+    border: none;
+    padding: 15px;
+    border-radius: 999px;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  button.diagnose:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(232,185,94,0.25);
+  }
+  button.diagnose:active{ transform: translateY(0); }
+  .error{
+    color: var(--rose);
+    font-size: 13px;
+    margin-top: 12px;
+    display:none;
+  }
+
+  /* magic square grid (洛書) */
+  .square-section{
+    margin-top: 44px;
+    text-align:center;
+    display:none;
+  }
+  .square-label{
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    color: var(--gold-soft);
+    text-transform:uppercase;
+    margin-bottom: 18px;
+  }
+  .square{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  .cell{
+    aspect-ratio: 1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 20px;
+    color: rgba(255,255,255,0.35);
+    transition: all .5s ease;
+  }
+  .cell.center{
+    color: rgba(255,255,255,0.25);
+  }
+  .cell.active{
+    background: radial-gradient(circle, rgba(232,185,94,0.35), rgba(232,185,94,0.08));
+    border-color: var(--gold);
+    color: var(--gold-soft);
+    box-shadow: 0 0 30px rgba(232,185,94,0.35);
+    transform: scale(1.06);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ box-shadow: 0 0 20px rgba(232,185,94,0.25); }
+    50%{ box-shadow: 0 0 36px rgba(232,185,94,0.45); }
+  }
+
+  /* result */
+  .result{
+    margin-top: 40px;
+    display:none;
+  }
+  .result-head{
+    text-align:center;
+    margin-bottom: 28px;
+  }
+  .star-badge{
+    display:inline-block;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--night-deep);
+    background: var(--gold);
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .star-name{
+    font-family: 'Shippori Mincho', serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--paper);
+  }
+  .type-name{
+    margin-top: 6px;
+    font-size: 16px;
+    color: var(--gold-soft);
+    font-family: 'Shippori Mincho', serif;
+  }
+  .catch{
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.9;
+    padding: 0 8px;
+  }
+  .result-card{
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(232,185,94,0.2);
+    border-radius: 16px;
+    padding: 24px 22px;
+    margin-top: 18px;
+  }
+  .result-card h3{
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    color: var(--gold-soft);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    display:flex;
+    align-items:center;
+    gap: 8px;
+  }
+  .result-card h3::before{
+    content:"";
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    display:inline-block;
+  }
+  .result-card ul{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap: 8px;
+  }
+  .result-card li{
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--paper);
+    padding-left: 14px;
+    position:relative;
+  }
+  .result-card li::before{
+    content:"—";
+    position:absolute;
+    left:0;
+    color: var(--sage);
+  }
+  .tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 8px;
+  }
+  .tag{
+    font-size: 12px;
+    color: var(--night-deep);
+    background: var(--mist);
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+  .caution p, .strength p{
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--paper);
+  }
+  .message{
+    text-align:center;
+    margin-top: 30px;
+    padding: 26px 20px;
+    border-top: 1px solid rgba(232,185,94,0.2);
+    border-bottom: 1px solid rgba(232,185,94,0.2);
+  }
+  .message p{
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    line-height: 2.1;
+    color: var(--gold-soft);
+    white-space: pre-line;
+  }
+  .signature{
+    margin-top: 10px;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--rose);
+  }
+  .retry{
+    display:block;
+    margin: 30px auto 0;
+    background: none;
+    border: 1px solid rgba(232,185,94,0.4);
+    color: var(--gold-soft);
+    padding: 10px 26px;
+    border-radius: 999px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    cursor:pointer;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+  }
+  .retry:hover{ background: rgba(232,185,94,0.1); }
+
+  footer{
+    text-align:center;
+    margin-top: 56px;
+    font-size: 11px;
+    color: rgba(207,214,228,0.4);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .cell.active{ animation:none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Nine Star Ki · 九星気学</div>
+    <h1>あなたの<span>星</span>が教える<br>働き方診断</h1>
+    <p class="sub">生年月日を入れるだけ。九つの星が、あなたに合った働き方のヒントをそっと教えてくれます。</p>
+  </header>
+
+  <div class="card" id="formCard">
+    <label class="small">生年月日を入力してください</label>
+    <div class="field-row">
+      <div style="flex:1.3">
+        <select id="year"></select>
+        <span class="unit">年</span>
+      </div>
+      <div style="flex:1">
+        <select id="month"></select>
+        <span class="unit">月</span>
+      </div>
+      <div style="flex:1">
+        <select id="day"></select>
+        <span class="unit">日</span>
+      </div>
+    </div>
+    <p class="error" id="err">生年月日を選んでください</p>
+    <button class="diagnose" id="goBtn">星を、占う</button>
+  </div>
+
+  <div class="square-section" id="squareSection">
+    <div class="square-label">洛書 · あなたの星の位置</div>
+    <div class="square" id="square"></div>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <footer>MAOふう働き方診断 &nbsp;·&nbsp; 九星気学をベースにした簡易占いです<br>厳密な鑑定は先生にご相談ください</footer>
+</div>
+
+<script>
+// ---------- data ----------
+const STARS = {
+  1: {
+    name: "一白水星", type: "静かに流れる、深海タイプ",
+    catch: "表には出ないけれど、誰よりも物事の本質を見ている。",
+    strengths: ["聞き上手で、人の本音を引き出す力がある","状況に合わせて形を変えられる柔軟さ","一人で深く集中する時間が力の源になる"],
+    work: ["在宅・少人数など、静かな環境で力を発揮","相談役・カウンセラー的なポジション","マイペースに進められる仕事","裏方として全体を支える役割"],
+    caution: "気を遣いすぎて、自分の疲れに気づくのが遅れがち。定期的に「何もしない時間」を予定に入れて。",
+    tags: ["カウンセリング","リサーチ","在宅ワーク","編集・ライティング","水回りの仕事"],
+    grid: "topcenter"
+  },
+  2: {
+    name: "二黒土星", type: "地道に育てる、大地タイプ",
+    catch: "派手さより、確かさ。積み重ねた信頼が、いちばんの武器。",
+    strengths: ["コツコツ続ける粘り強さ","誰かを支え、育てることへの適性","縁の下でチームを安定させる存在感"],
+    work: ["長期的なプロジェクトや育成の仕事","サポート業務・秘書・総務","農業や食など、大地に関わる仕事","マニュアル化・仕組みづくり"],
+    caution: "頑張りすぎて自分を後回しにしやすい。「私も大事にする」を、今日のToDoに一つ足して。",
+    tags: ["育成・教育","農業","事務・総務","介護・福祉","不動産"],
+    grid: "topright"
+  },
+  3: {
+    name: "三碧木星", type: "はじめの一歩を踏み出す、若木タイプ",
+    catch: "考えるより先に動く。その瞬発力が、周りを動かす。",
+    strengths: ["新しいことへの好奇心とスピード感","声・言葉で人を惹きつける力","トレンドを誰より早くキャッチする感度"],
+    work: ["新規事業・立ち上げフェーズ","発信・広報・SNS運用","音楽や声を使う仕事","変化の多い現場"],
+    caution: "勢いで始めて、途中で飽きやすい。「最初の3日」を乗り越える小さな仕組みを持っておくと◎。",
+    tags: ["広報・PR","SNS発信","音楽・声の仕事","営業","スタートアップ"],
+    grid: "midleft"
+  },
+  4: {
+    name: "四緑木星", type: "風のように結ぶ、つなぎ役タイプ",
+    catch: "人と人、想いと想いのあいだを、そっと風のように結んでいく。",
+    strengths: ["どんな相手ともフラットに関われる社交性","信頼を橋渡しする調整力","遠くの縁も自然につないでしまう不思議な力"],
+    work: ["人と人をつなぐコーディネート業務","国際的な仕事・越境する働き方","紹介・マッチング・コミュニティ運営","風通しのいいチームでの仕事"],
+    caution: "八方美人に見られやすく、本音を飲み込みがち。信頼できる一人には、本心を話す時間を作って。",
+    tags: ["コミュニティ運営","貿易・国際業務","紹介業","コーディネーター","旅・移動を伴う仕事"],
+    grid: "topleft"
+  },
+  5: {
+    name: "五黄土星", type: "すべてを引き受ける、太陽の中心タイプ",
+    catch: "良くも悪くも、影響力が大きい。器の大きさが、そのまま実力になる。",
+    strengths: ["どんな困難も引き受けられる胆力","スケールの大きな決断力","人を巻き込むカリスマ性"],
+    work: ["経営・組織のトップに立つ仕事","再生・立て直しのプロジェクト","大きな責任を引き受けるポジション","独立・起業"],
+    caution: "背負いすぎて孤独になりやすい。「全部自分で」を手放し、頼れる右腕を早めに見つけて。",
+    tags: ["経営・起業","事業再生","リーダー職","不動産・大型案件","組織づくり"],
+    grid: "center"
+  },
+  6: {
+    name: "六白金星", type: "揺るがない、天のタイプ",
+    catch: "筋を通すことにこだわる。その誠実さが、やがて信頼になる。",
+    strengths: ["高い理想と原則を貫くぶれなさ","責任感の強さと完遂力","品格のある立ち居振る舞い"],
+    work: ["専門性の高い士業・技術職","責任者・管理職","品質やルールを守る仕事","公的な役割"],
+    caution: "完璧を求めすぎて、自分にも他人にも厳しくなりがち。「70点で十分」を口癖にしてみて。",
+    tags: ["士業・専門職","管理職","品質管理","公務・団体運営","スポーツ・武道"],
+    grid: "bottomright"
+  },
+  7: {
+    name: "七赤金星", type: "その場を華やがせる、湖のタイプ",
+    catch: "話すだけで、場が明るくなる。楽しませ上手は、立派な才能。",
+    strengths: ["社交性とユーモアで場をつくる力","交渉や接客での言葉のセンス","美しいもの・楽しいことを見抜く目"],
+    work: ["接客業・飲食・エンタメ","営業・交渉ごと","美容・ファッション関連","人前で話す仕事"],
+    caution: "楽しい方に流されて、地道な作業を後回しにしがち。締切より先に「小さな締切」を自分に課して。",
+    tags: ["接客・サービス","美容・ファッション","営業・交渉","エンタメ","飲食"],
+    grid: "midright"
+  },
+  8: {
+    name: "八白土星", type: "積み上げて、変えていく、山のタイプ",
+    catch: "静かに積み重ね、ある日突然、大きく変わる。山のような働き方。",
+    strengths: ["コツコツ蓄積した力を一気に開花させる瞬発力","財産・資産・仕組みを育てる力","変化・転換をチャンスに変える柔軟さ"],
+    work: ["資産運用・不動産・相続関連","事業承継や引き継ぎの仕事","終活・生前整理など人生の節目に関わる仕事","改革・改善プロジェクト"],
+    caution: "変化の途中は停滞して見えやすい。「今は山を積んでいる時期」だと自分に言い聞かせて。",
+    tags: ["不動産・相続","終活・生前整理","事業承継","建築・リフォーム","資産運用"],
+    grid: "bottomleft"
+  },
+  9: {
+    name: "九紫火星", type: "光を放つ、太陽のタイプ",
+    catch: "そこにいるだけで目を引く。表現し、輝くことが仕事になる人。",
+    strengths: ["直感力と美的センスの高さ","人前に立つことを恐れない華やかさ","物事の本質を瞬時に見抜く知性"],
+    work: ["クリエイティブ・デザイン・アート","講師・発信者・表現者","美容・映像・写真関連","情熱を注げる専門分野"],
+    caution: "気分の波が仕事の質に出やすい。燃え尽きる前に「静かな時間」を意識的に確保して。",
+    tags: ["デザイン・アート","講師・発信","美容・映像","コンサルティング","ブランディング"],
+    grid: "bottomcenter"
+  }
+};
+
+// 洛書 layout (magic square)
+const LAYOUT = [
+  [4,9,2],
+  [3,5,7],
+  [8,1,6]
+];
+
+// ---------- populate selects ----------
+const yearSel = document.getElementById('year');
+const monthSel = document.getElementById('month');
+const daySel = document.getElementById('day');
+
+const thisYear = new Date().getFullYear();
+for(let y = thisYear; y >= 1920; y--){
+  const opt = document.createElement('option');
+  opt.value = y; opt.textContent = y;
+  yearSel.appendChild(opt);
+}
+yearSel.value = 1990;
+
+for(let m = 1; m <= 12; m++){
+  const opt = document.createElement('option');
+  opt.value = m; opt.textContent = m;
+  monthSel.appendChild(opt);
+}
+function populateDays(){
+  const y = parseInt(yearSel.value), m = parseInt(monthSel.value);
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const prev = daySel.value;
+  daySel.innerHTML = '';
+  for(let d = 1; d <= daysInMonth; d++){
+    const opt = document.createElement('option');
+    opt.value = d; opt.textContent = d;
+    daySel.appendChild(opt);
+  }
+  if(prev && prev <= daysInMonth) daySel.value = prev;
+}
+yearSel.addEventListener('change', populateDays);
+monthSel.addEventListener('change', populateDays);
+populateDays();
+
+// ---------- star calculation ----------
+function digitRoot(n){
+  n = Math.abs(n);
+  while(n >= 10){
+    n = String(n).split('').reduce((a,b)=>a+parseInt(b),0);
+  }
+  return n;
+}
+
+function calcStar(year, month, day){
+  // 立春(だいたい2/4)より前は前年生まれとして扱う簡易版
+  let effYear = year;
+  if(month === 1 || (month === 2 && day < 4)){
+    effYear = year - 1;
+  }
+  const dr = digitRoot(effYear);
+  let star;
+  if(effYear >= 2000){
+    star = 10 - dr;
+    if(star === 0) star = 9;
+  } else {
+    star = 11 - dr;
+    if(star <= 0) star += 9;
+    if(star > 9) star -= 9;
+  }
+  return star;
+}
+
+// ---------- grid rendering ----------
+function renderSquare(activeStar){
+  const sq = document.getElementById('square');
+  sq.innerHTML = '';
+  LAYOUT.forEach(row => {
+    row.forEach(num => {
+      const cell = document.createElement('div');
+      cell.className = 'cell' + (num === 5 ? ' center' : '');
+      cell.textContent = num;
+      if(num === activeStar) cell.classList.add('active');
+      sq.appendChild(cell);
+    });
+  });
+}
+
+// ---------- render result ----------
+function renderResult(starNum){
+  const s = STARS[starNum];
+  const el = document.getElementById('result');
+  el.innerHTML = `
+    <div class="result-head">
+      <div class="star-badge">YOUR STAR</div>
+      <div class="star-name">${s.name}</div>
+      <div class="type-name">${s.type}</div>
+      <p class="catch">${s.catch}</p>
+    </div>
+
+    <div class="result-card">
+      <h3>強み</h3>
+      <ul>${s.strengths.map(x=>`<li>${x}</li>`).join('')}</ul>
+    </div>
+
+    <div class="result-card">
+      <h3>向いている働き方</h3>
+      <ul>${s.work.map(x=>`<li>${x}</li>`).join('')}</ul>
+    </div>
+
+    <div class="result-card caution">
+      <h3>ちょっと注意</h3>
+      <p>${s.caution}</p>
+    </div>
+
+    <div class="result-card">
+      <h3>相性の良い仕事ジャンル</h3>
+      <div class="tags">${s.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+
+    <div class="message">
+      <p>${s.name}のあなたへ。\n${s.catch}\n今日という日も、あなたらしい一歩を。</p>
+      <div class="signature">南無マオ</div>
+    </div>
+
+    <button class="retry" id="retryBtn">もう一度、占う</button>
+  `;
+  document.getElementById('retryBtn').addEventListener('click', reset);
+}
+
+function reset(){
+  document.getElementById('formCard').style.display = 'block';
+  document.getElementById('squareSection').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('result').innerHTML = '';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ---------- flow ----------
+document.getElementById('goBtn').addEventListener('click', () => {
+  const y = parseInt(yearSel.value);
+  const m = parseInt(monthSel.value);
+  const d = parseInt(daySel.value);
+  const err = document.getElementById('err');
+  if(!y || !m || !d){
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+
+  const star = calcStar(y, m, d);
+
+  document.getElementById('formCard').style.display = 'none';
+  const squareSection = document.getElementById('squareSection');
+  squareSection.style.display = 'block';
+  renderSquare(null);
+
+  squareSection.scrollIntoView({behavior:'smooth', block:'start'});
+
+  setTimeout(() => {
+    renderSquare(star);
+  }, 400);
+
+  setTimeout(() => {
+    renderResult(star);
+    const resultEl = document.getElementById('result');
+    resultEl.style.display = 'block';
+    resultEl.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 1600);
+});
+</script>
+</body>
+</html>
